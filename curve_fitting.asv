@@ -1,0 +1,34 @@
+clear
+clc
+
+delete('curve_p.csv');
+data_set = readmatrix("data_set.csv");
+leg_length = data_set(:, 1);
+folder = 'K_matrix_data';
+
+for i = 1:20
+    filename = fprintf
+    Kij_vec = readmatrix(fullfile(folder, 'k11.csv'));
+    
+    p = polyfit(leg_length, Kij_vec, 6);
+    Kij_pre = polyval(p, leg_length); % 20个样本对应的拟合后的值
+    R = corrcoef(Kij_vec, Kij_pre); % 计算拟合相关系数
+    fprintf("Kij拟合的相关系数为：%.3f\n",R(1,2));
+    writematrix(p, 'curve_p.csv', 'WriteMode', 'append');
+    
+    %% 画图
+    % 数据准备
+    x_fit = linspace(min(leg_length), max(leg_length), 100); % 拟合曲线用的连续点
+    y_fit = polyval(p, x_fit);
+    figure;
+    plot(leg_length, Kij_vec, 'o', 'MarkerFaceColor','b'); % 样本点
+    hold on;
+    plot(x_fit, y_fit, '-r', 'LineWidth',2); % 拟合曲线
+    hold off;
+    xlabel('x');
+    ylabel('y');
+    title('样本点与拟合曲线');
+    legend('样本点','拟合曲线','Location','best');
+    grid on;
+
+end
