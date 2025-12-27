@@ -72,17 +72,8 @@ typedef struct{
     float leg_force_ref;//ÍÈÖ§³ÖÁ¦²¹³¥
 }chassis_t;
 
-void mylimit_float(float* in, float maxlimit, float minlimit){
-    if(*in > maxlimit){
-        *in = maxlimit;
-    }
-    else if(*in < minlimit){
-        *in = minlimit;
-    }
-}
-
-void initChassisTask();
-void loadManualControl();
-void updateChassisControl();
-
+void initChassisTask(void);
+void loadManualControl(void);
+void updateChassisControl(void);
+void chassis_task(void);
 #endif

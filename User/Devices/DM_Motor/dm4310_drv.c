@@ -91,7 +91,7 @@ void dm4310_fbdata(Joint_Motor_t *motor, uint8_t *rx_data,uint32_t data_len)
 }
 
 
-void dm6215_fbdata(Wheel_Motor_t *motor, uint8_t *rx_data,uint32_t data_len)
+void dm3507_fbdata(Wheel_Motor_t *motor, uint8_t *rx_data,uint32_t data_len)
 { 
 	if(data_len==FDCAN_DLC_BYTES_8)
 	{//返回的数据有8个字节

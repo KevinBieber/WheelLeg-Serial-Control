@@ -1,0 +1,9 @@
+ctrlboard-h7_imu\vmc_calc_version_1_1.o: ..\User\Algorithm\VMC\VMC_calc_version_1_1.c
+ctrlboard-h7_imu\vmc_calc_version_1_1.o: ..\User\Algorithm\VMC\VMC_calc_version_1_1.h
+ctrlboard-h7_imu\vmc_calc_version_1_1.o: ../Drivers/CMSIS/DSP/Include/arm_math.h
+ctrlboard-h7_imu\vmc_calc_version_1_1.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+ctrlboard-h7_imu\vmc_calc_version_1_1.o: D:\keil\core\ARM\ARMCC\Bin\..\include\stdint.h
+ctrlboard-h7_imu\vmc_calc_version_1_1.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+ctrlboard-h7_imu\vmc_calc_version_1_1.o: D:\keil\core\ARM\ARMCC\Bin\..\include\string.h
+ctrlboard-h7_imu\vmc_calc_version_1_1.o: D:\keil\core\ARM\ARMCC\Bin\..\include\math.h
+ctrlboard-h7_imu\vmc_calc_version_1_1.o: D:\keil\core\ARM\ARMCC\Bin\..\include\float.h

@@ -1,0 +1,9 @@
+ctrlboard-h7_imu\lqr.o: ..\User\Algorithm\LQR\LQR.c
+ctrlboard-h7_imu\lqr.o: ..\User\Algorithm\LQR\LQR.h
+ctrlboard-h7_imu\lqr.o: ../Drivers/CMSIS/DSP/Include/arm_math.h
+ctrlboard-h7_imu\lqr.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+ctrlboard-h7_imu\lqr.o: D:\keil\core\ARM\ARMCC\Bin\..\include\stdint.h
+ctrlboard-h7_imu\lqr.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+ctrlboard-h7_imu\lqr.o: D:\keil\core\ARM\ARMCC\Bin\..\include\string.h
+ctrlboard-h7_imu\lqr.o: D:\keil\core\ARM\ARMCC\Bin\..\include\math.h
+ctrlboard-h7_imu\lqr.o: D:\keil\core\ARM\ARMCC\Bin\..\include\float.h

@@ -82,7 +82,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>0</RunUserProg1>
-            <RunUserProg2>1</RunUserProg2>
+            <RunUserProg2>0</RunUserProg2>
             <UserProg1Name></UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H723xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../Drivers/CMSIS/DSP/Include;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../User/Algorithm/EKF;../User/Algorithm/kalman;../User/Algorithm/mahony;../User/APP;../User/Bsp;../User/Devices/BMI088;../User/Devices/DM_Motor;../User/Algorithm/VMC;../User/Controller;../User/Lib;../User/Algorithm/PID;../User/Algorithm/filter</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../Drivers/CMSIS/DSP/Include;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../User/Algorithm/EKF;../User/Algorithm/kalman;../User/Algorithm/mahony;../User/APP;../User/Bsp;../User/Devices/BMI088;../User/Devices/DM_Motor;../User/Algorithm/VMC;../User/Controller;../User/Lib;../User/Algorithm/PID;../User/Algorithm/filter;..\User\Algorithm\LQR</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1023,11 +1023,6 @@
               <FilePath>..\User\Algorithm\EKF\QuaternionEKF.c</FilePath>
             </File>
             <File>
-              <FileName>VMC_calc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Algorithm\VMC\VMC_calc.c</FilePath>
-            </File>
-            <File>
               <FileName>kalman_filter.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Algorithm\kalman\kalman_filter.c</FilePath>
@@ -1041,6 +1036,16 @@
               <FileName>pid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Algorithm\PID\pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>LQR.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Algorithm\LQR\LQR.c</FilePath>
+            </File>
+            <File>
+              <FileName>VMC_calc_version_1_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Algorithm\VMC\VMC_calc_version_1_1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1697,24 +1702,19 @@
               <FilePath>..\User\APP\INS_task.c</FilePath>
             </File>
             <File>
-              <FileName>chassisL_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\APP\chassisL_task.c</FilePath>
-            </File>
-            <File>
               <FileName>observe_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\APP\observe_task.c</FilePath>
             </File>
             <File>
-              <FileName>ps2_task.c</FileName>
+              <FileName>remote_control.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\APP\ps2_task.c</FilePath>
+              <FilePath>..\User\APP\remote_control.c</FilePath>
             </File>
             <File>
-              <FileName>chassisR_task.c</FileName>
+              <FileName>chassis_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\APP\chassisR_task.c</FilePath>
+              <FilePath>..\User\APP\chassis_task.c</FilePath>
             </File>
           </Files>
         </Group>

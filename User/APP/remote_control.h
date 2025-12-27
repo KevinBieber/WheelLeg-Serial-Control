@@ -2,6 +2,7 @@
 #define REMOTE_CONTROL_H
 
 #include "usart.h"
+#include "main.h"
 #define UART1_DMA_RX_BUFFER_SIZE  64
 #define UART1_FRAME_BUFFER_SIZE  64
 
@@ -13,7 +14,7 @@ typedef enum{
 typedef struct{
     uint8_t* data;
     uint8_t length;
-    uint16_t last_time;
+    uint32_t last_time;
 }frame_data_t;
 
 typedef struct {
@@ -40,8 +41,8 @@ typedef struct{
 uint8_t crsf_crc8(const uint8_t *data, uint8_t len);
 void crsf_decode_channels(const uint8_t *payload, uint16_t *ch);
 uint8_t remoteControlParse(crsf_data_t* crsf_data, rc_data_t* rc_data, uint8_t* buffer, uint8_t buffer_length);
-void dmaToFrameBuffer(uint8_t* dma_buffer, uint8_t* frame_buffer, uint8_t* frame_length);
-void initRemoteControl();
-void remoteControlTask();
+void dmaToFrameBuffer(void);
+void initRemoteControl(void);
+void remoteControlTask(void);
 
 #endif

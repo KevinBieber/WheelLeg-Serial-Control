@@ -2,7 +2,7 @@
 #include "fdcan.h"
 #include "dm4310_drv.h"
 #include "string.h"
-#include "chassisR_task.h"
+#include "chassis_task.h"
 
 FDCAN_RxHeaderTypeDef RxHeader1;
 uint8_t g_Can1RxData[64];
@@ -136,7 +136,8 @@ uint8_t canx_send_data(FDCAN_HandleTypeDef *hcan, uint16_t id, uint8_t *data, ui
 }
 
 
-extern chassis_t chassis_move;
+extern chassis_leg_t leg_left;
+extern chassis_leg_t leg_right;
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 { 
@@ -150,9 +151,12 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 			
 			switch(RxHeader1.Identifier)
 			{
-        case 3 :dm4310_fbdata(&chassis_move.joint_motor[0], g_Can1RxData,RxHeader1.DataLength);break;
-        case 4 :dm4310_fbdata(&chassis_move.joint_motor[1], g_Can1RxData,RxHeader1.DataLength);break;	         	
-				case 0 :dm6215_fbdata(&chassis_move.wheel_motor[0], g_Can1RxData,RxHeader1.DataLength);break;
+				case 0x13 : dm4310_fbdata(&leg_left.leg_motor[0], g_Can1RxData, RxHeader1.DataLength);break;
+				case 0x14 : dm4310_fbdata(&leg_left.leg_motor[1], g_Can1RxData, RxHeader1.DataLength);break;
+				case 0x11 : dm3507_fbdata(&leg_left.wheel_motor, g_Can1RxData, RxHeader1.DataLength);break;
+				case 0x15 : dm4310_fbdata(&leg_right.leg_motor[0], g_Can1RxData, RxHeader1.DataLength);break;
+				case 0x16 : dm4310_fbdata(&leg_right.leg_motor[1], g_Can1RxData, RxHeader1.DataLength);break;
+				case 0x12 : dm3507_fbdata(&leg_right.wheel_motor, g_Can1RxData, RxHeader1.DataLength);break;
 				default: break;
 			}			
 	  }
@@ -168,13 +172,6 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
       /* Retrieve Rx messages from RX FIFO0 */
 			memset(g_Can2RxData, 0, sizeof(g_Can2RxData));
       HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &RxHeader2, g_Can2RxData);
-			switch(RxHeader2.Identifier)
-			{
-        case 3 :dm4310_fbdata(&chassis_move.joint_motor[2], g_Can2RxData,RxHeader2.DataLength);break;
-        case 4 :dm4310_fbdata(&chassis_move.joint_motor[3], g_Can2RxData,RxHeader2.DataLength);break;	         	
-				case 0 :dm6215_fbdata(&chassis_move.wheel_motor[1], g_Can2RxData,RxHeader2.DataLength);break;
-				default: break;
-			}	
     }
   }
 }

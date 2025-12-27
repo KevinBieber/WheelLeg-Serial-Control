@@ -13,20 +13,22 @@ void VMCDataPrepare(vmc_leg_t* vmc_legx, float* theta){
     vmc_legx->theta2 = theta[1];
     vmc_legx->jacobbi[0] = 0.5f;
     vmc_legx->jacobbi[1] = 0.5f;
-    vmc_legx->jacobbi[2] = 2 * vmc_legx->l1 * arm_sin((theta[1] - theta[0]) / 2.0f);
-    vmc_legx->jacobbi[3] = -2 * vmc_legx->l1 * arm_cos((theta[1] - theta[0]) / 2.0f);
+    vmc_legx->jacobbi[2] = 2 * vmc_legx->l1 * arm_sin_f32((theta[1] - theta[0]) / 2.0f);
+    vmc_legx->jacobbi[3] = -2 * vmc_legx->l1 * arm_cos_f32((theta[1] - theta[0]) / 2.0f);
 }
 
-void legPosCalc(vmc_leg_t* vmc_legx, float* theta_velocity){
+void legPosCalc(vmc_leg_t* vmc_legx, float* theta_velocity, float dt){
     float theta[2] = {0};
     theta[0] = vmc_legx->theta1;
     theta[1] = vmc_legx->theta2;
     vmc_legx->theta1_velocity = theta_velocity[0];
     vmc_legx->theta2_velocity = theta_velocity[1];
     vmc_legx->leg_pos.phi = (theta[0] + theta[1]) / 2.0f;
-    vmc_legx->leg_pos.leg_length = 4 * vmc_legx->l1 * arm_cos((theta[0] - theta[1]) / 2.0f);
+    vmc_legx->leg_pos.leg_length = 4 * vmc_legx->l1 * arm_cos_f32((theta[0] - theta[1]) / 2.0f);
     vmc_legx->leg_pos.phi_velocity = (theta_velocity[0] + theta_velocity[1]) / 2.0f;
-    vmc_legx->leg_pos.leg_length_velocity = -2 * vmc_legx->l1 * arm_sin((theta[1] - theta[0]) / 2.0f) * (theta_velocity[1] - theta_velocity[0]);
+    vmc_legx->leg_pos.leg_length_velocity = -2 * vmc_legx->l1 * arm_sin_f32((theta[1] - theta[0]) / 2.0f) * (theta_velocity[1] - theta_velocity[0]);
+    vmc_legx->leg_pos.phi_accel = (vmc_legx->leg_pos.phi_velocity - vmc_legx->leg_pos.phi_vel_last) / dt;
+    vmc_legx->leg_pos.phi_vel_last = vmc_legx->leg_pos.phi_velocity;
 }
 
 void VMCVirtual2RealCalc(vmc_leg_t* vmc_legx, float* real_torque, float* virtual_force){

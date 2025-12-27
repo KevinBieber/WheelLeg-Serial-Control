@@ -40,10 +40,12 @@ const float vaEstimateKF_H[4] = {1.0f, 0.0f,
                                  0.0f, 1.0f};	// 设置矩阵H为常量
 														 															 
 extern INS_t INS;		
-extern chassis_t chassis_move;																 															 
-																 
-extern vmc_leg_t right;			
-extern vmc_leg_t left;	
+//extern chassis_t chassis_move;																 															 
+//																 
+//extern vmc_leg_t right;			
+//extern vmc_leg_t left;	
+extern chassis_leg_t leg_left;
+extern chassis_leg_t leg_right;
 
 float vel_acc[2]; 
 uint32_t OBSERVE_TIME=3;//任务周期是3ms	
@@ -55,30 +57,30 @@ void 	Observe_task(void)
 	{//等待加速度收敛
 	  osDelay(1);	
 	}
-	static float wr,wl=0.0f;
-	static float vrb,vlb=0.0f;
-	static float aver_v=0.0f;
+//	static float wr,wl=0.0f;
+//	static float vrb,vlb=0.0f;
+//	static float aver_v=0.0f;
 		
 	xvEstimateKF_Init(&vaEstimateKF);
 
   while(1)
 	{  
-		wr= -chassis_move.wheel_motor[0].para.vel-INS.Gyro[1]+right.d_alpha;//右边驱动轮转子相对大地角速度，这里定义的是顺时针为正
-		vrb=wr*0.0603f+right.L0*right.d_theta*arm_cos_f32(right.theta)+right.d_L0*arm_sin_f32(right.theta);//机体b系的速度
+		/* 原来的 */
+		// wr= -chassis_move.wheel_motor[0].para.vel-INS.Gyro[1]+right.d_alpha;//右边驱动轮转子相对大地角速度，这里定义的是顺时针为正
+		// vrb=wr*0.0603f+right.L0*right.d_theta*arm_cos_f32(right.theta)+right.d_L0*arm_sin_f32(right.theta);//机体b系的速度
 		
-		wl= -chassis_move.wheel_motor[1].para.vel+INS.Gyro[1]+left.d_alpha;//左边驱动轮转子相对大地角速度，这里定义的是顺时针为正
-		vlb=wl*0.0603f+left.L0*left.d_theta*arm_cos_f32(left.theta)+left.d_L0*arm_sin_f32(left.theta);//机体b系的速度
+		// wl= -chassis_move.wheel_motor[1].para.vel+INS.Gyro[1]+left.d_alpha;//左边驱动轮转子相对大地角速度，这里定义的是顺时针为正
+		// vlb=wl*0.0603f+left.L0*left.d_theta*arm_cos_f32(left.theta)+left.d_L0*arm_sin_f32(left.theta);//机体b系的速度
 		
-		aver_v=(vrb-vlb)/2.0f;//取平均
-    xvEstimateKF_Update(&vaEstimateKF,-INS.MotionAccel_b[0],aver_v);
+		// aver_v=(vrb-vlb)/2.0f;//取平均
+    	// xvEstimateKF_Update(&vaEstimateKF,-INS.MotionAccel_b[0],aver_v);
 		
-		//原地自转的过程中v_filter和x_filter应该都是为0
-		chassis_move.v_filter=vel_acc[0];//得到卡尔曼滤波后的速度
-		chassis_move.x_filter=chassis_move.x_filter+chassis_move.v_filter*((float)OBSERVE_TIME/1000.0f);
-
-	//如果想直接用轮子速度，不做融合的话可以这样
-//	chassis_move.v_filter=(chassis_move.wheel_motor[0].para.vel-chassis_move.wheel_motor[1].para.vel)*(-0.0603f)/2.0f;//0.0603是轮子半径，电机反馈的是角速度，乘半径后得到线速度，数学模型中定义的是轮子顺时针为正，所以要乘个负号
-//	chassis_move.x_filter=chassis_move.x_filter+chassis_move.v_filter*((float)OBSERVE_TIME/1000.0f);
+		// //原地自转的过程中v_filter和x_filter应该都是为0
+		// chassis_move.v_filter=vel_acc[0];//得到卡尔曼滤波后的速度
+		// chassis_move.x_filter=chassis_move.x_filter+chassis_move.v_filter*((float)OBSERVE_TIME/1000.0f);
+		//如果想直接用轮子速度，不做融合的话可以这样
+		//	chassis_move.v_filter=(chassis_move.wheel_motor[0].para.vel-chassis_move.wheel_motor[1].para.vel)*(-0.0603f)/2.0f;//0.0603是轮子半径，电机反馈的是角速度，乘半径后得到线速度，数学模型中定义的是轮子顺时针为正，所以要乘个负号
+		//	chassis_move.x_filter=chassis_move.x_filter+chassis_move.v_filter*((float)OBSERVE_TIME/1000.0f);
 				 
 	osDelay(OBSERVE_TIME);
 	}

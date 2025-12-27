@@ -63,12 +63,13 @@ ctrlboard-h7_imu\freertos.o: ../Drivers/CMSIS/DSP/Include/arm_math.h
 ctrlboard-h7_imu\freertos.o: D:\keil\core\ARM\ARMCC\Bin\..\include\string.h
 ctrlboard-h7_imu\freertos.o: D:\keil\core\ARM\ARMCC\Bin\..\include\float.h
 ctrlboard-h7_imu\freertos.o: D:\keil\core\ARM\ARMCC\Bin\..\include\stdlib.h
-ctrlboard-h7_imu\freertos.o: ../User/APP/chassisR_task.h
+ctrlboard-h7_imu\freertos.o: ../User/APP/chassis_task.h
 ctrlboard-h7_imu\freertos.o: ../User/Devices/DM_Motor/dm4310_drv.h
 ctrlboard-h7_imu\freertos.o: ../Core/Inc/fdcan.h
 ctrlboard-h7_imu\freertos.o: ../User/Bsp/can_bsp.h
 ctrlboard-h7_imu\freertos.o: ../User/Algorithm/PID/pid.h
-ctrlboard-h7_imu\freertos.o: ../User/Algorithm/VMC/VMC_calc.h
-ctrlboard-h7_imu\freertos.o: ../User/APP/chassisL_task.h
+ctrlboard-h7_imu\freertos.o: ../User/Algorithm/VMC/VMC_calc_version_1_1.h
+ctrlboard-h7_imu\freertos.o: ..\User\Algorithm\LQR\LQR.h
+ctrlboard-h7_imu\freertos.o: ../User/APP/remote_control.h
+ctrlboard-h7_imu\freertos.o: ../Core/Inc/usart.h
 ctrlboard-h7_imu\freertos.o: ../User/APP/observe_task.h
-ctrlboard-h7_imu\freertos.o: ../User/APP/ps2_task.h

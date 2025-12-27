@@ -26,10 +26,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "INS_task.h"
-#include "chassisR_task.h"
-#include "chassisL_task.h"
+#include "chassis_task.h"
 #include "observe_task.h"
-#include "ps2_task.h"
+#include "remote_control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -191,7 +190,7 @@ void Remote_Control_Task(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    remoteControlTask();
   }
   /* USER CODE END Remote_Control_Task */
 }
@@ -209,7 +208,7 @@ void Chassis_Task(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+      chassis_task();
   }
   /* USER CODE END Chassis_Task */
 }
