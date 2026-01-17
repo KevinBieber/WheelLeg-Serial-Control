@@ -40,8 +40,6 @@ typedef enum{
 typedef struct{
     float v_x_target;
     float w_target;
-    float v_x_max;
-    float w_max;
 
     chassis_status_t chassis_status;
     common_mode_t common_mode;
@@ -70,6 +68,12 @@ typedef struct{
     float leg_length_left_target;
     float leg_length_right_target;
     float leg_force_ref;//ÍÈÖ§³ÖÁ¦²¹³¥
+	float leg_phi_left_target;
+	float leg_phi_right_target;
+	
+    float v_x_max;
+    float w_max;
+	float wheel_r;//ÂÖ°ë¾¶
 }chassis_t;
 
 void initChassisTask(void);

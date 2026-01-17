@@ -40,6 +40,9 @@ ctrlboard-h7_imu\controller.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal
 ctrlboard-h7_imu\controller.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h
 ctrlboard-h7_imu\controller.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 ctrlboard-h7_imu\controller.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ctrlboard-h7_imu\controller.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h
+ctrlboard-h7_imu\controller.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h
+ctrlboard-h7_imu\controller.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h
 ctrlboard-h7_imu\controller.o: ../User/Bsp/bsp_dwt.h
 ctrlboard-h7_imu\controller.o: ../Core/Inc/main.h
 ctrlboard-h7_imu\controller.o: D:\keil\core\ARM\ARMCC\Bin\..\include\string.h

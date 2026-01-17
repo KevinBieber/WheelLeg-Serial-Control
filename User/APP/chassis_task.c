@@ -7,6 +7,8 @@ extern INS_t INS;
 extern vmc_leg_t vmc_leg_left;
 extern vmc_leg_t vmc_leg_right;
 
+float asd = 0.0f;
+
 chassis_leg_t leg_left;
 chassis_leg_t leg_right;
 chassis_t bipe_chassis;
@@ -40,27 +42,32 @@ void mylimit_float(float* in, float maxlimit, float minlimit){
 void initChassisTask(void){
 	while(INS.ins_flag==0)
 	{//等待加速度收敛
-	  osDelay(1);	
+	  osDelay(1);
 	}
     bipe_chassis.leg_force_ref = 10.0f;
-    float LegR_Pid_params[3] = {200.0f, 2.0f, 10.0f};//pid参数
-    float LegL_Pid_params[3] = {200.0f, 2.0f, 10.0f};
+    float LegR_Pid_params[3] = {200.0f, 4.0f, 10.0f};//pid参数
+    float LegL_Pid_params[3] = {200.0f, 4.0f, 10.0f};
     float Tp_Pid_params[3] = {8.0f, 0.0f, 0.5f};
-    float Turn_Pid_params[3] = {50.0f, 0.0f, 5.0f};
-    float Roll_Pid_params[3] = {100.0f, 0.0f, 10.0f};
+    float Turn_Pid_params[3] = {5.0f, 0.0f, 0.0f};
+    float Roll_Pid_params[3] = {0.5f, 0.0f, 0.0f};
     float PhiL_Pid_params[3] = {8.0f, 0.0f, 0.5f};
     float PhiR_Pid_params[3] = {8.0f, 0.0f, 0.5f};
     float PhiVelL_Pid_params[3] = {10.0f, 0.0f, 1.0f};
     float PhiVelR_Pid_params[3] = {10.0f, 0.0f, 1.0f};
-    PID_init(&LegR_Pid, PID_DELTA, LegR_Pid_params, 80.0f, 2.0f);
-    PID_init(&LegL_Pid, PID_DELTA, LegL_Pid_params, 80.0f, 2.0f);
+    PID_init(&LegR_Pid, PID_DELTA, LegR_Pid_params, 80.0f, 5.0f);
+    PID_init(&LegL_Pid, PID_DELTA, LegL_Pid_params, 80.0f, 5.0f);
     PID_init(&Tp_Pid, PID_DELTA, Tp_Pid_params, 15.0f, 3.0f);
     PID_init(&Turn_Pid, PID_DELTA, Turn_Pid_params, 1.0f, 0.2f);
-    PID_init(&Roll_Pid, PID_DELTA, Roll_Pid_params, 1.0f, 0.2f);
+    PID_init(&Roll_Pid, PID_DELTA, Roll_Pid_params, 0.5f, 0.1f);
     PID_init(&PhiL_Pid, PID_DELTA, PhiL_Pid_params, 5.0f, 1.0f);
     PID_init(&PhiR_Pid, PID_DELTA, PhiR_Pid_params, 5.0f, 1.0f);
     PID_init(&PhiVelL_Pid, PID_DELTA, PhiVelL_Pid_params, 5.0f, 1.0f);
     PID_init(&PhiVelR_Pid, PID_DELTA, PhiVelR_Pid_params, 5.0f, 1.0f);
+	
+	bipe_chassis.v_x_max = 1.0f;
+	bipe_chassis.w_max = 0.5f;
+	bipe_chassis.wheel_r = 0.05f;
+	
 
     leg_left.vmc_leg_x = &vmc_leg_left;
     leg_right.vmc_leg_x = &vmc_leg_right;
@@ -126,8 +133,10 @@ void loadManualControl(void){
                 ctrl_data.chassis_status = CHASSIS_STATE_REST;
             }
             else if(rc_data.swich_SA == 2){
-                ctrl_data.chassis_status = CHASSIS_STATE_STANDUP;
-                ctrl_data.standup_status = STANDUP_STATE_START;
+//                ctrl_data.chassis_status = CHASSIS_STATE_STANDUP;
+//                ctrl_data.standup_status = STANDUP_STATE_START;
+				ctrl_data.chassis_status = CHASSIS_STATE_COMMON;
+				ctrl_data.common_mode = CHASSIS_RUN;
             }
 
             last_SA = rc_data.swich_SA;
@@ -135,14 +144,16 @@ void loadManualControl(void){
 
         if(ctrl_data.chassis_status == CHASSIS_STATE_COMMON){
             //速度控制
-            ctrl_data.v_x_target = (rc_data.left_y / 660.0f) * ctrl_data.v_x_max;
-            ctrl_data.w_target = (rc_data.right_x / 660.0f) * ctrl_data.w_max;
+            ctrl_data.v_x_target = rc_data.left_y * bipe_chassis.v_x_max;
+            ctrl_data.w_target = rc_data.left_x * bipe_chassis.w_max;
             
             //正常跑
             if(ctrl_data.common_mode == CHASSIS_RUN){
                 //腿长
-				bipe_chassis.leg_length_left_target = 0.16f + 0.07f * rc_data.right_y;
-				bipe_chassis.leg_length_right_target = 0.16f + 0.07f * rc_data.right_y;
+				bipe_chassis.leg_length_left_target = 0.15f + 0.06f * rc_data.right_y;
+				bipe_chassis.leg_length_right_target = 0.15f + 0.06f * rc_data.right_y;
+				bipe_chassis.leg_phi_left_target = PI / 3.0f * rc_data.left_x;
+				bipe_chassis.leg_phi_right_target = PI / 3.0f * rc_data.left_x;
             }
 
             //跳跃切换
@@ -192,19 +203,21 @@ void updateChassisControl(void){
 
     x_left[0] = leg_left.vmc_leg_x->leg_pos.phi;
     x_left[1] = leg_left.vmc_leg_x->leg_pos.phi_velocity;
-    x_left[2] = leg_left.wheel_motor.para.vel;
-    current_time = xTaskGetTickCount();
+	x_left[3] = leg_left.wheel_motor.para.vel * bipe_chassis.wheel_r;
+	current_time = xTaskGetTickCount();
     dt = (current_time - last_time) / 1000.0f;
-    x_left[3] += x_left[2] * dt;
+//    x_left[2] += x_left[3] * dt;
+	x_left[2] = 0.0f;
     x_left[4] = INS.Pitch;
     x_left[5] = INS.Gyro[1];
 
     x_right[0] = leg_right.vmc_leg_x->leg_pos.phi;
     x_right[1] = leg_right.vmc_leg_x->leg_pos.phi_velocity;
-    x_right[2] = leg_right.wheel_motor.para.vel;
-    current_time = xTaskGetTickCount();
+    x_right[3] = leg_right.wheel_motor.para.vel * bipe_chassis.wheel_r;
+	current_time = xTaskGetTickCount();
     dt = (current_time - last_time) / 1000.0f;
-    x_right[3] += x_right[2] * dt;
+//    x_right[2] += x_right[3] * dt;
+	x_right[2] = 0.0f;
     x_right[4] = INS.Pitch;
     x_right[5] = INS.Gyro[1];
 
@@ -238,8 +251,13 @@ void updateChassisControl(void){
             ctrl_data.standup_status = STANDUP_STATE_MID;
         }
         else if(ctrl_data.standup_status == STANDUP_STATE_MID){
-            bipe_chassis.leg_length_left_target = 0.15f;
-            bipe_chassis.leg_length_right_target = 0.15f;
+            bipe_chassis.leg_length_left_target = 0.10f;
+            bipe_chassis.leg_length_right_target = 0.10f;
+//			bipe_chassis.leg_length_left_target = 0.15f + 0.06f * rc_data.right_y;
+//			bipe_chassis.leg_length_right_target = 0.15f + 0.06f * rc_data.right_y;
+//			mylimit_float(&bipe_chassis.leg_length_left_target,0.20f,0.10f);
+//			mylimit_float(&bipe_chassis.leg_length_right_target,0.20f,0.10f);
+			
             PID_Calc(&LegL_Pid, leg_left.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_left_target);
             PID_Calc(&LegR_Pid, leg_right.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_right_target);
             leg_left.vmc_force[1] = LegL_Pid.out;
@@ -282,23 +300,31 @@ void updateChassisControl(void){
             leg_right.leg_motor_torque[1] = 0.0f;
             leg_right.vmc_force[0] = 0.0f;
             leg_right.vmc_force[1] = 0.0f;
+			//测试摆角环用
+//            PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, bipe_chassis.leg_phi_left_target);
+//            PID_Calc(&PhiR_Pid, leg_right.vmc_leg_x->leg_pos.phi, bipe_chassis.leg_phi_right_target);
+//            leg_left.vmc_force[0] = PhiL_Pid.out;
+//            leg_right.vmc_force[0] = PhiR_Pid.out;
             //劈叉环
             PID_Calc(&Tp_Pid, leg_left.vmc_leg_x->leg_pos.phi - leg_right.vmc_leg_x->leg_pos.phi, 0.0f);
             leg_left.vmc_force[0] += Tp_Pid.out;
             leg_right.vmc_force[0] -= Tp_Pid.out;
+            //roll环
+            PID_Calc(&Roll_Pid, INS.Roll, 0.0f);
+            bipe_chassis.leg_length_left_target += Roll_Pid.out;
+            bipe_chassis.leg_length_right_target -= Roll_Pid.out;
+			
+			mylimit_float(&bipe_chassis.leg_length_left_target,0.20f,0.10f);
+			mylimit_float(&bipe_chassis.leg_length_right_target,0.20f,0.10f);
             //腿长环
             PID_Calc(&LegL_Pid, leg_left.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_left_target);
             PID_Calc(&LegR_Pid, leg_right.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_right_target);
             leg_left.vmc_force[1] = LegL_Pid.out + bipe_chassis.leg_force_ref;
             leg_right.vmc_force[1] = LegR_Pid.out + bipe_chassis.leg_force_ref;
-            //roll环
-            PID_Calc(&Roll_Pid, INS.Roll, 0.0f);
-            leg_left.vmc_force[1] -= Roll_Pid.out;
-            leg_right.vmc_force[1] += Roll_Pid.out;
             //转向环
-            PID_Calc(&Turn_Pid, INS.Yaw, 0.0f);
-            leg_left.wheel_motor_torque = Turn_Pid.out;
-            leg_right.wheel_motor_torque = Turn_Pid.out;
+//			PID_Calc(&Turn_Pid, INS.Gyro[2], ctrl_data.w_target);
+//            leg_left.wheel_motor_torque = Turn_Pid.out;
+//            leg_right.wheel_motor_torque = Turn_Pid.out;
             //LQR
             LQRCalculate(leg_left.vmc_leg_x->leg_pos.leg_length, 0);
             leg_left.wheel_motor_torque += u_left[0];
@@ -310,11 +336,11 @@ void updateChassisControl(void){
             VMCVirtual2RealCalc(leg_left.vmc_leg_x, leg_left.leg_motor_torque, leg_left.vmc_force);
             VMCVirtual2RealCalc(leg_right.vmc_leg_x, leg_right.leg_motor_torque, leg_right.vmc_force);
 
-            if(leg_left.leg_force[1] < 12.0f && leg_right.leg_force[1] < 12.0f){
-                //双腿离地
-                ctrl_data.common_mode = CHASSIS_JUMP;
-                ctrl_data.jump_status = JUMP_STATE_LANDING;
-            }
+//            if(leg_left.leg_force[1] < 12.0f && leg_right.leg_force[1] < 12.0f){
+//                //双腿离地
+//                ctrl_data.common_mode = CHASSIS_JUMP;
+//                ctrl_data.jump_status = JUMP_STATE_LANDING;
+//            }
         }
         else if(ctrl_data.common_mode == CHASSIS_JUMP){//跳跃
             if(ctrl_data.jump_status == JUMP_STATE_PREPARE){//收腿
@@ -428,6 +454,17 @@ void updateChassisControl(void){
         leg_right.leg_motor_torque[1] = 0.0f;
         leg_right.wheel_motor_torque = 0.0f;
     }
+
+    leg_right.leg_motor_torque[0] = -leg_right.leg_motor_torque[0];
+    leg_right.leg_motor_torque[1] = -leg_right.leg_motor_torque[1];
+    leg_right.wheel_motor_torque = -leg_right.wheel_motor_torque;
+	
+	mylimit_float(&leg_left.leg_motor_torque[0],10.0f,-10.0f);
+	mylimit_float(&leg_left.leg_motor_torque[1],10.0f,-10.0f);
+	mylimit_float(&leg_left.wheel_motor_torque,2.5f,-2.5f);
+	mylimit_float(&leg_right.leg_motor_torque[0],10.0f,-10.0f);
+	mylimit_float(&leg_right.leg_motor_torque[1],10.0f,-10.0f);
+	mylimit_float(&leg_right.wheel_motor_torque,2.5f,-2.5f);
 
 	mit_ctrl(&hfdcan1,0x03, 0.0f, 0.0f,0.0f, 0.0f,leg_left.leg_motor_torque[0]);
 	osDelay(1);

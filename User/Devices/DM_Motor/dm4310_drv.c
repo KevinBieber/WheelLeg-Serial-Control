@@ -95,16 +95,43 @@ void dm3507_fbdata(Wheel_Motor_t *motor, uint8_t *rx_data,uint32_t data_len)
 { 
 	if(data_len==FDCAN_DLC_BYTES_8)
 	{//返回的数据有8个字节
+	  uint32_t time_now = DWT->CYCCNT;
 	  motor->para.id = (rx_data[0])&0x0F;
 	  motor->para.state = (rx_data[0])>>4;
 	  motor->para.p_int=(rx_data[1]<<8)|rx_data[2];
 	  motor->para.v_int=(rx_data[3]<<4)|(rx_data[4]>>4);
 	  motor->para.t_int=((rx_data[4]&0xF)<<8)|rx_data[5];
 	  motor->para.pos = uint_to_float(motor->para.p_int, P_MIN2, P_MAX2, 16); // (-12.0,12.0)
-	  motor->para.vel = uint_to_float(motor->para.v_int, V_MIN2, V_MAX2, 12); // (-30.0,30.0)
+//	  motor->para.vel = uint_to_float(motor->para.v_int, V_MIN2, V_MAX2, 12); // (-30.0,30.0)
 	  motor->para.tor = uint_to_float(motor->para.t_int, T_MIN2, T_MAX2, 12);  // (-18.0,18.0)
 	  motor->para.Tmos = (float)(rx_data[6]);
 	  motor->para.Tcoil = (float)(rx_data[7]);
+	  float dt = 0.0f;
+//	  if((int)(time_now - motor->last_time) < 0){//时间溢出
+//	      dt = (float)(4.8f * 1e9 + (time_now - motor->last_time)) / (480.0f * 1e6);
+//	  }
+//	  else{
+//	      dt = (float)(time_now - motor->last_time) / (480.0f * 1e6);
+//	  }
+//	  motor->last_time = time_now;
+	  dt = DWT_GetDeltaT(&motor->last_time);
+	  
+	  float delta_pos = motor->para.pos - motor->pos_last;
+	  motor->pos_last = motor->para.pos;
+	  
+	  if(delta_pos > (P_MAX2 - P_MIN2) * 0.5f){
+	      delta_pos -= P_MAX2 - P_MIN2;
+		  motor->vel_est = delta_pos / dt;
+	  }
+	  else if(delta_pos < -(P_MAX2 - P_MIN2) * 0.5f){
+	      delta_pos += P_MAX2 - P_MIN2;
+		  motor->vel_est = delta_pos / dt;
+	  }
+	  else{
+	      motor->vel_est = delta_pos / dt;
+	  }
+	  motor->para.vel = 0.8 * motor->vel_est + 0.2 * motor->para.vel;
+	  
 	}
 }
 

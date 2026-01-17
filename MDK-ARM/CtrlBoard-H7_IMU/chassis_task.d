@@ -40,6 +40,9 @@ ctrlboard-h7_imu\chassis_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_h
 ctrlboard-h7_imu\chassis_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h
 ctrlboard-h7_imu\chassis_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 ctrlboard-h7_imu\chassis_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ctrlboard-h7_imu\chassis_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h
+ctrlboard-h7_imu\chassis_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h
+ctrlboard-h7_imu\chassis_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h
 ctrlboard-h7_imu\chassis_task.o: ../User/Bsp/bsp_dwt.h
 ctrlboard-h7_imu\chassis_task.o: ../Core/Inc/main.h
 ctrlboard-h7_imu\chassis_task.o: ../User/Devices/DM_Motor/dm4310_drv.h
@@ -55,7 +58,7 @@ ctrlboard-h7_imu\chassis_task.o: ../User/Devices/BMI088/BMI088driver.h
 ctrlboard-h7_imu\chassis_task.o: ../User/Algorithm/EKF/QuaternionEKF.h
 ctrlboard-h7_imu\chassis_task.o: ../User/Algorithm/kalman/kalman_filter.h
 ctrlboard-h7_imu\chassis_task.o: D:\keil\core\ARM\ARMCC\Bin\..\include\stdlib.h
-ctrlboard-h7_imu\chassis_task.o: ..\User\Algorithm\LQR\LQR.h
+ctrlboard-h7_imu\chassis_task.o: ../User/Algorithm/LQR/LQR.h
 ctrlboard-h7_imu\chassis_task.o: ..\User\APP\remote_control.h
 ctrlboard-h7_imu\chassis_task.o: ../Core/Inc/usart.h
 ctrlboard-h7_imu\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h

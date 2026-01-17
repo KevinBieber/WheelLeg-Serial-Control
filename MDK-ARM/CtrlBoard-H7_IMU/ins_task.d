@@ -41,6 +41,9 @@ ctrlboard-h7_imu\ins_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_t
 ctrlboard-h7_imu\ins_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h
 ctrlboard-h7_imu\ins_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 ctrlboard-h7_imu\ins_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ctrlboard-h7_imu\ins_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h
+ctrlboard-h7_imu\ins_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h
+ctrlboard-h7_imu\ins_task.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h
 ctrlboard-h7_imu\ins_task.o: ../User/Bsp/bsp_dwt.h
 ctrlboard-h7_imu\ins_task.o: ../Core/Inc/main.h
 ctrlboard-h7_imu\ins_task.o: ../User/Algorithm/EKF/QuaternionEKF.h

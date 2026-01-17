@@ -42,6 +42,9 @@ ctrlboard-h7_imu\user_lib.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_t
 ctrlboard-h7_imu\user_lib.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h
 ctrlboard-h7_imu\user_lib.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 ctrlboard-h7_imu\user_lib.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ctrlboard-h7_imu\user_lib.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h
+ctrlboard-h7_imu\user_lib.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h
+ctrlboard-h7_imu\user_lib.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h
 ctrlboard-h7_imu\user_lib.o: ../User/Bsp/bsp_dwt.h
 ctrlboard-h7_imu\user_lib.o: ../Core/Inc/main.h
 ctrlboard-h7_imu\user_lib.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h

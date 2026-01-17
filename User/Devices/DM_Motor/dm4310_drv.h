@@ -19,23 +19,23 @@
 #define T_MIN -10.0f
 #define T_MAX 10.0f
 
-#define P_MIN2 -12.5f
-#define P_MAX2 12.5f
-#define V_MIN2 -45.0f
-#define V_MAX2 45.0f
+#define P_MIN2 -12.566f
+#define P_MAX2 12.566f
+#define V_MIN2 -50.0f
+#define V_MAX2 50.0f
 #define KP_MIN2 0.0f
 #define KP_MAX2 500.0f
 #define KD_MIN2 0.0f
 #define KD_MAX2 5.0f
-#define T_MIN2 -10.0f
-#define T_MAX2 10.0f
+#define T_MIN2 -5.0f
+#define T_MAX2 5.0f
 
 typedef struct 
 {
 	uint16_t id;
 	uint16_t state;
 	int p_int;
-	int v_int;
+	uint16_t v_int;
 	int t_int;
 	int kp_int;
 	int kd_int;
@@ -59,6 +59,9 @@ typedef struct
 {
 	uint16_t mode;
 	float wheel_T;//轮毂电机的输出扭矩，单位为N
+	uint32_t last_time;
+	float vel_est;
+	float pos_last;
 	
 	motor_fbpara_t para;	
 }Wheel_Motor_t ;

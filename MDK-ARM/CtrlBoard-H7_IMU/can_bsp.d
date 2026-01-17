@@ -40,6 +40,9 @@ ctrlboard-h7_imu\can_bsp.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_ti
 ctrlboard-h7_imu\can_bsp.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h
 ctrlboard-h7_imu\can_bsp.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 ctrlboard-h7_imu\can_bsp.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ctrlboard-h7_imu\can_bsp.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h
+ctrlboard-h7_imu\can_bsp.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h
+ctrlboard-h7_imu\can_bsp.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h
 ctrlboard-h7_imu\can_bsp.o: ../User/Bsp/bsp_dwt.h
 ctrlboard-h7_imu\can_bsp.o: ../Core/Inc/main.h
 ctrlboard-h7_imu\can_bsp.o: ../Core/Inc/fdcan.h
@@ -55,6 +58,6 @@ ctrlboard-h7_imu\can_bsp.o: ../User/Devices/BMI088/BMI088driver.h
 ctrlboard-h7_imu\can_bsp.o: ../User/Algorithm/EKF/QuaternionEKF.h
 ctrlboard-h7_imu\can_bsp.o: ../User/Algorithm/kalman/kalman_filter.h
 ctrlboard-h7_imu\can_bsp.o: D:\keil\core\ARM\ARMCC\Bin\..\include\stdlib.h
-ctrlboard-h7_imu\can_bsp.o: ..\User\Algorithm\LQR\LQR.h
+ctrlboard-h7_imu\can_bsp.o: ../User/Algorithm/LQR/LQR.h
 ctrlboard-h7_imu\can_bsp.o: ../User/APP/remote_control.h
 ctrlboard-h7_imu\can_bsp.o: ../Core/Inc/usart.h

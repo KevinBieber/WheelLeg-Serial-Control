@@ -14,7 +14,7 @@ void FDCAN1_Config(void)
 {
   FDCAN_FilterTypeDef sFilterConfig;
   /* Configure Rx filter */	
-	sFilterConfig.IdType = FDCAN_STANDARD_ID;//扩展ID不接收
+	sFilterConfig.IdType = FDCAN_STANDARD_ID;//???ID??????
   sFilterConfig.FilterIndex = 0;
   sFilterConfig.FilterType = FDCAN_FILTER_MASK;
   sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
@@ -25,17 +25,17 @@ void FDCAN1_Config(void)
 		Error_Handler();
 	}
 		
-/* 全局过滤设置 */
-/* 接收到消息ID与标准ID过滤不匹配，不接受 */
-/* 接收到消息ID与扩展ID过滤不匹配，不接受 */
-/* 过滤标准ID远程帧 */ 
-/* 过滤扩展ID远程帧 */ 
+/* ?????????? */
+/* ????????ID????ID?????????????? */
+/* ????????ID?????ID?????????????? */
+/* ??????ID???? */ 
+/* ???????ID???? */ 
   if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_FILTER_REMOTE, FDCAN_FILTER_REMOTE) != HAL_OK)
   {
     Error_Handler();
   }
 
-	/* 开启RX FIFO0的新数据中断 */
+	/* ????RX FIFO0?????????ж? */
   if (HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
   {
     Error_Handler();
@@ -93,7 +93,7 @@ uint8_t canx_send_data(FDCAN_HandleTypeDef *hcan, uint16_t id, uint8_t *data, ui
   TxHeader.TxFrameType = FDCAN_DATA_FRAME;  
   if(len<=8)	
 	{
-	  TxHeader.DataLength = len<<16;     // 发送长度：8byte
+	  TxHeader.DataLength = len<<16;     // ????????8byte
 	}
 	else  if(len==12)	
 	{
@@ -120,15 +120,15 @@ uint8_t canx_send_data(FDCAN_HandleTypeDef *hcan, uint16_t id, uint8_t *data, ui
 	 }
 											
 	TxHeader.ErrorStateIndicator =  FDCAN_ESI_ACTIVE;
-  TxHeader.BitRateSwitch = FDCAN_BRS_OFF;//比特率切换关闭，不适用于经典CAN
+  TxHeader.BitRateSwitch = FDCAN_BRS_OFF;//???????л????????????????CAN
   TxHeader.FDFormat =  FDCAN_CLASSIC_CAN;            // CANFD
   TxHeader.TxEventFifoControl =  FDCAN_NO_TX_EVENTS;  
-  TxHeader.MessageMarker = 0;//消息标记
+  TxHeader.MessageMarker = 0;//??????
 
-   // 发送CAN指令
+   // ????CAN???
 //  if(HAL_FDCAN_AddMessageToTxFifoQ(hcan, &TxHeader, data) != HAL_OK)
 //  {
-//        // 发送失败处理
+//        // ??????????
 //      Error_Handler();      
 //  }
 	 HAL_FDCAN_AddMessageToTxFifoQ(hcan, &TxHeader, data);
@@ -146,19 +146,40 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
     if(hfdcan->Instance == FDCAN1)
     {
       /* Retrieve Rx messages from RX FIFO0 */
-			memset(g_Can1RxData, 0, sizeof(g_Can1RxData));	//接收前先清空数组	
+			memset(g_Can1RxData, 0, sizeof(g_Can1RxData));	//??????????????	
       HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader1, g_Can1RxData);
 			
 			switch(RxHeader1.Identifier)
 			{
-				case 0x13 : dm4310_fbdata(&leg_left.leg_motor[0], g_Can1RxData, RxHeader1.DataLength);break;
-				case 0x14 : dm4310_fbdata(&leg_left.leg_motor[1], g_Can1RxData, RxHeader1.DataLength);break;
-				case 0x11 : dm3507_fbdata(&leg_left.wheel_motor, g_Can1RxData, RxHeader1.DataLength);break;
-				case 0x15 : dm4310_fbdata(&leg_right.leg_motor[0], g_Can1RxData, RxHeader1.DataLength);break;
-				case 0x16 : dm4310_fbdata(&leg_right.leg_motor[1], g_Can1RxData, RxHeader1.DataLength);break;
-				case 0x12 : dm3507_fbdata(&leg_right.wheel_motor, g_Can1RxData, RxHeader1.DataLength);break;
+				case 0x13 : 
+					dm4310_fbdata(&leg_left.leg_motor[0], g_Can1RxData, RxHeader1.DataLength);
+					break;
+				case 0x14 : 
+					dm4310_fbdata(&leg_left.leg_motor[1], g_Can1RxData, RxHeader1.DataLength);
+					break;
+				case 0x11 :
+					dm3507_fbdata(&leg_left.wheel_motor, g_Can1RxData, RxHeader1.DataLength);
+					break;
+				case 0x15 : 
+					dm4310_fbdata(&leg_right.leg_motor[0], g_Can1RxData, RxHeader1.DataLength);
+					leg_right.leg_motor[0].para.pos = -leg_right.leg_motor[0].para.pos;
+					leg_right.leg_motor[0].para.vel = -leg_right.leg_motor[0].para.vel;
+					leg_right.leg_motor[0].para.tor = -leg_right.leg_motor[0].para.tor;
+					break;
+				case 0x16 : 
+					dm4310_fbdata(&leg_right.leg_motor[1], g_Can1RxData, RxHeader1.DataLength);
+					leg_right.leg_motor[1].para.pos = -leg_right.leg_motor[1].para.pos;
+					leg_right.leg_motor[1].para.vel = -leg_right.leg_motor[1].para.vel;
+					leg_right.leg_motor[1].para.tor = -leg_right.leg_motor[1].para.tor;
+					break;
+				case 0x12 : 
+					dm3507_fbdata(&leg_right.wheel_motor, g_Can1RxData, RxHeader1.DataLength);
+					leg_right.wheel_motor.para.vel = -leg_right.wheel_motor.para.vel;
+					leg_right.wheel_motor.para.pos = -leg_right.wheel_motor.para.pos;
+					leg_right.wheel_motor.para.tor = -leg_right.wheel_motor.para.tor;
+					break;
 				default: break;
-			}			
+			}
 	  }
   }
 }

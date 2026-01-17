@@ -29,6 +29,7 @@
 #include "chassis_task.h"
 #include "observe_task.h"
 #include "remote_control.h"
+#include "vofa_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,6 +56,7 @@ osThreadId INS_TASKHandle;
 osThreadId OBSERVE_TASKHandle;
 osThreadId REMOTE_CONTROL_Handle;
 osThreadId CHASSIS_TASKHandle;
+osThreadId VOFA_TASKHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -66,7 +68,9 @@ void INS_Task(void const * argument);
 void OBSERVE_Task(void const * argument);
 void Remote_Control_Task(void const * argument);
 void Chassis_Task(void const * argument);
+void Vofa_task(void const * argument);
 
+extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /**
@@ -116,6 +120,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(CHASSIS_TASK, Chassis_Task, osPriorityAboveNormal, 0, 1024);
   CHASSIS_TASKHandle = osThreadCreate(osThread(CHASSIS_TASK), NULL);
 
+  /* definition and creation of VOFA_TASK */
+  osThreadDef(VOFA_TASK, Vofa_task, osPriorityLow, 0, 128);
+  VOFA_TASKHandle = osThreadCreate(osThread(VOFA_TASK), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -131,6 +139,8 @@ void MX_FREERTOS_Init(void) {
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
+  /* init code for USB_DEVICE */
+  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
   for(;;)
@@ -211,6 +221,24 @@ void Chassis_Task(void const * argument)
       chassis_task();
   }
   /* USER CODE END Chassis_Task */
+}
+
+/* USER CODE BEGIN Header_Vofa_task */
+/**
+* @brief Function implementing the VOFA_TASK thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Vofa_task */
+void Vofa_task(void const * argument)
+{
+  /* USER CODE BEGIN Vofa_task */
+  /* Infinite loop */
+  for(;;)
+  {
+    vofa_task();
+  }
+  /* USER CODE END Vofa_task */
 }
 
 /* Private application code --------------------------------------------------*/

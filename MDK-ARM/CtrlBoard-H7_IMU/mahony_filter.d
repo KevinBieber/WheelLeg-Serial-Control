@@ -40,6 +40,9 @@ ctrlboard-h7_imu\mahony_filter.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_
 ctrlboard-h7_imu\mahony_filter.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h
 ctrlboard-h7_imu\mahony_filter.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 ctrlboard-h7_imu\mahony_filter.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ctrlboard-h7_imu\mahony_filter.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h
+ctrlboard-h7_imu\mahony_filter.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h
+ctrlboard-h7_imu\mahony_filter.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h
 ctrlboard-h7_imu\mahony_filter.o: ../Drivers/CMSIS/DSP/Include/arm_math.h
 ctrlboard-h7_imu\mahony_filter.o: D:\keil\core\ARM\ARMCC\Bin\..\include\string.h
 ctrlboard-h7_imu\mahony_filter.o: D:\keil\core\ARM\ARMCC\Bin\..\include\float.h
