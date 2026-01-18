@@ -3,7 +3,7 @@
 <title>Static Call Graph - [CtrlBoard-H7_IMU\CtrlBoard-H7_IMU.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image CtrlBoard-H7_IMU\CtrlBoard-H7_IMU.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Jan 17 22:07:09 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Jan 19 06:08:06 2026
 <BR><P>
 <H3>Maximum Stack Usage =        368 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1492,8 +1492,8 @@ Global Symbols
 <LI><a href="#[158]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_DevDisconnect
 <LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_CoreInit
 <LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCDEx_ActivateLPM
-<LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_MspInit
 <LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
+<LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_MspInit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_Init
 </UL>
@@ -2144,11 +2144,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OBSERVE_Task
 </UL>
 
-<P><STRONG><a name="[23f]"></a>PID_Calc</STRONG> (Thumb, 492 bytes, Stack size 0 bytes, pid.o(i.PID_Calc))
+<P><STRONG><a name="[240]"></a>PID_Calc</STRONG> (Thumb, 492 bytes, Stack size 0 bytes, pid.o(i.PID_Calc))
 <BR><BR>[Called By]<UL><LI><a href="#[211]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;updateChassisControl
 </UL>
 
-<P><STRONG><a name="[240]"></a>PID_clear</STRONG> (Thumb, 72 bytes, Stack size 0 bytes, pid.o(i.PID_clear))
+<P><STRONG><a name="[241]"></a>PID_clear</STRONG> (Thumb, 72 bytes, Stack size 0 bytes, pid.o(i.PID_clear))
 <BR><BR>[Called By]<UL><LI><a href="#[211]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;updateChassisControl
 </UL>
 
@@ -3170,7 +3170,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[23b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;remoteControlParse
 </UL>
 
-<P><STRONG><a name="[20f]"></a>initChassisTask</STRONG> (Thumb, 626 bytes, Stack size 120 bytes, chassis_task.o(i.initChassisTask))
+<P><STRONG><a name="[20f]"></a>initChassisTask</STRONG> (Thumb, 618 bytes, Stack size 120 bytes, chassis_task.o(i.initChassisTask))
 <BR><BR>[Stack]<UL><LI>Max Depth = 256<LI>Call Chain = initChassisTask &rArr; enable_motor_mode &rArr; canx_send_data &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -3204,7 +3204,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[20f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;initChassisTask
 </UL>
 
-<P><STRONG><a name="[21d]"></a>legPosCalc</STRONG> (Thumb, 258 bytes, Stack size 32 bytes, vmc_calc_version_1_1.o(i.legPosCalc))
+<P><STRONG><a name="[21d]"></a>legPosCalc</STRONG> (Thumb, 366 bytes, Stack size 32 bytes, vmc_calc_version_1_1.o(i.legPosCalc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = legPosCalc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32
@@ -3213,7 +3213,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[211]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;updateChassisControl
 </UL>
 
-<P><STRONG><a name="[210]"></a>loadManualControl</STRONG> (Thumb, 282 bytes, Stack size 0 bytes, chassis_task.o(i.loadManualControl))
+<P><STRONG><a name="[210]"></a>loadManualControl</STRONG> (Thumb, 284 bytes, Stack size 0 bytes, chassis_task.o(i.loadManualControl))
 <BR><BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
@@ -3299,7 +3299,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[23b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;remoteControlParse
 </UL>
 
-<P><STRONG><a name="[241]"></a>mylimit_float</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, chassis_task.o(i.mylimit_float))
+<P><STRONG><a name="[23f]"></a>mylimit_float</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, chassis_task.o(i.mylimit_float))
 <BR><BR>[Called By]<UL><LI><a href="#[211]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;updateChassisControl
 </UL>
 
@@ -3391,12 +3391,12 @@ Global Symbols
 <LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm3507_fbdata
 </UL>
 
-<P><STRONG><a name="[211]"></a>updateChassisControl</STRONG> (Thumb, 3478 bytes, Stack size 80 bytes, chassis_task.o(i.updateChassisControl))
+<P><STRONG><a name="[211]"></a>updateChassisControl</STRONG> (Thumb, 3596 bytes, Stack size 80 bytes, chassis_task.o(i.updateChassisControl))
 <BR><BR>[Stack]<UL><LI>Max Depth = 256<LI>Call Chain = updateChassisControl &rArr; mit_ctrl2 &rArr; canx_send_data &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[215]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetTickCount
-<LI><a href="#[241]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mylimit_float
+<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mylimit_float
 <LI><a href="#[222]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mit_ctrl2
 <LI><a href="#[220]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mit_ctrl
 <LI><a href="#[21d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;legPosCalc
@@ -3404,8 +3404,8 @@ Global Symbols
 <LI><a href="#[200]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VMCLegForceCalc
 <LI><a href="#[1fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VMCDataPrepare
 <LI><a href="#[1ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LQRCalculate
-<LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID_clear
-<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID_Calc
+<LI><a href="#[241]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID_clear
+<LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID_Calc
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
@@ -4105,10 +4105,10 @@ Local Symbols
 <P><STRONG><a name="[c]"></a>USBD_CDC_Init</STRONG> (Thumb, 404 bytes, Stack size 16 bytes, usbd_cdc.o(i.USBD_CDC_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 132<LI>Call Chain = USBD_CDC_Init &rArr; USBD_LL_PrepareReceive &rArr; HAL_PCD_EP_Receive &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_static_malloc
+<BR>[Calls]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
+<LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_static_malloc
 <LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_PrepareReceive
 <LI><a href="#[1d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_OpenEP
-<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> usbd_cdc.o(.data)
 </UL>

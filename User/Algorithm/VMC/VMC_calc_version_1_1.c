@@ -29,6 +29,15 @@ void legPosCalc(vmc_leg_t* vmc_legx, float* theta_velocity, float dt){
     vmc_legx->leg_pos.leg_length_velocity = -2 * vmc_legx->l1 * arm_sin_f32((theta[1] - theta[0]) / 2.0f) * (theta_velocity[1] - theta_velocity[0]);
     vmc_legx->leg_pos.phi_accel = (vmc_legx->leg_pos.phi_velocity - vmc_legx->leg_pos.phi_vel_last) / dt;
     vmc_legx->leg_pos.phi_vel_last = vmc_legx->leg_pos.phi_velocity;
+	
+	while(vmc_legx->leg_pos.phi > PI || vmc_legx->leg_pos.phi < -PI){
+		if(vmc_legx->leg_pos.phi > PI){
+			vmc_legx->leg_pos.phi -= 2*PI;
+		}
+		else if(vmc_legx->leg_pos.phi < -PI){
+			vmc_legx->leg_pos.phi += 2*PI;
+		}
+	}
 }
 
 void VMCVirtual2RealCalc(vmc_leg_t* vmc_legx, float* real_torque, float* virtual_force){

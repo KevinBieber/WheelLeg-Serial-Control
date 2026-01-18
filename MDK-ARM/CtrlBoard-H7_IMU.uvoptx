@@ -183,52 +183,62 @@
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>LegL_Pid</ItemText>
+          <ItemText>INS</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>INS</ItemText>
+          <ItemText>leg_left.vmc_force</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>leg_left.vmc_force</ItemText>
+          <ItemText>x_left</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>x_left</ItemText>
+          <ItemText>x_right</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>x_right</ItemText>
+          <ItemText>u_left</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>u_left</ItemText>
+          <ItemText>u_right</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>u_right</ItemText>
+          <ItemText>PhiL_Pid</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PhiL_Pid</ItemText>
+          <ItemText>PhiR_Pid</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>asd</ItemText>
+          <ItemText>K_data</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>K_data,0x0A</ItemText>
+          <ItemText>Tp_Pid</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>LegR_Pid</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>LegL_Pid</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
