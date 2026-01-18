@@ -21,28 +21,29 @@ sin_phi_gama = sin(phi + gama);
 cos_phi_gama = cos(phi + gama);
 
 const_x_matrix = {Iw, Im, mw, mp, M, g, R, lm};
-const_matrix = {0.000074, 0.00921, 0.200, 0.85, 2.145, 9.8, 0.050, 0.00939}; % 对应 Iw Im mw mp M g R lm共八个
+const_matrix = {0.000074, 0.00921, 0.200, 0.7275, 2.145, 9.8, 0.050, 0.00939}; % 对应 Iw Im mw mp M g R lm共八个
 
 x_matrix = {phi, phi_d, x, x_d, theta, theta_d, T, Tp};
 solution_matrix = {0, 0, 0, 0, 0, 0, 0, 0}; % 刚开始用
 
-MatQ = [10 0 0 0 0 0; 0 1 0 0 0 0; 0 0 5 0 0 0; 0 0 0 10 0 0; 0 0 0 0 1000 0; 0 0 0 0 0 1];
-MatR = [20 0; 0 0.25]; %权重矩阵 R 的设计
+MatQ = [30 0 0 0 0 0; 0 5 0 0 0 0; 0 0 5 0 0 0; 0 0 0 10 0 0; 0 0 0 0 1000 0; 0 0 0 0 0 1];
+MatR = [20 0; 0 4]; %权重矩阵 R 的设计
 
 % 表达式
 % Nm = -M * (x_dd - l * (sin_phi_alpha * phi_d2 - cos_phi_alpha * phi_dd) + lm * (- sin_theta * theta_d2 + cos_theta * theta_dd));
-Nm = -M * (x_dd - L * (-sin(phi) * phi_d2 + cos(phi) * phi_dd) + lm * (- sin_theta * theta_d2 + cos_theta * theta_dd));
+Nm = -M * (x_dd + L * (-sin(phi) * phi_d2 + cos(phi) * phi_dd) + lm * (- sin_theta * theta_d2 + cos_theta * theta_dd));
 % Pm = M * g + M * (l * (-cos_phi_alpha * phi_d2 - sin_phi_alpha * phi_dd) + lm * (-cos_theta * theta_d2 - sin_theta * theta_dd));
 Pm = M * g + M * (L * (-cos(phi) * phi_d2 - sin(phi) * phi_dd) + lm * (-cos_theta * theta_d2 - sin_theta * theta_dd));
 
-eq_N = Nm - N == mp * (x_dd - l * (sin_phi_alpha * phi_d2 - cos_phi_alpha * phi_dd));
+eq_N = Nm - N == mp * (x_dd + l * (-sin_phi_alpha * phi_d2 + cos_phi_alpha * phi_dd));
 eq_P = P - Pm == mp * g + mp * l * (-cos_phi_alpha * phi_d2 - sin_phi_alpha * phi_dd);
 N = solve(eq_N, N);
 P = solve(eq_P, P); % 得到N和P的表达式
 
 % eq_phi_dd = Ip * phi_dd == Tp - T + l * cos_phi_alpha * N + l * sin_phi_alpha * P - lp * sin_phi_gama * Pm + lp * cos_phi_gama * Nm;
 eq_phi_dd = Ip * phi_dd == Tp - T + l * cos_phi_alpha * N + l * sin_phi_alpha * P + lp * sin_phi_gama * Pm + lp * cos_phi_gama * Nm;
-eq_x_dd = x_dd == (N * R + T) / (Iw / R + mw * R);
+% eq_x_dd = x_dd == (N * R + T) / (Iw / R + mw * R);
+eq_x_dd = x_dd == (T + N * R) / (Iw / R + mw * R);
 eq_theta_dd = Im * theta_dd == -Tp + Pm * lm * sin_theta + Nm * lm * cos_theta;
 
 phi_x_theta = solve([eq_phi_dd,eq_x_dd,eq_theta_dd],[phi_dd,x_dd,theta_dd]);
