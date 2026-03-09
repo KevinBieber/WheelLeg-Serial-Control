@@ -36,6 +36,10 @@ typedef struct{
     float left_y;
     float right_x;
     float right_y;
+	float last_left_x;
+	float last_left_y;
+	float last_right_x;
+	float last_right_y;
 }rc_data_t;
 
 uint8_t crsf_crc8(const uint8_t *data, uint8_t len);

@@ -70,6 +70,10 @@ uint8_t remoteControlParse(crsf_data_t* crsf_data, rc_data_t* rc_data, uint8_t* 
     if(crc_calculated != buffer[buffer_length - 1]){
         return 0x03; // CRC mismatch
     }
+	
+	if(buffer[2] != 0x16){
+		return 0x04;
+	}
 
     crsf_data->sync_byte = buffer[0];
     crsf_data->length = buffer[1];
@@ -92,10 +96,20 @@ uint8_t remoteControlParse(crsf_data_t* crsf_data, rc_data_t* rc_data, uint8_t* 
 	if(fabs(rc_data->right_x) < 0.005)rc_data->right_x = 0.0f;
 	if(fabs(rc_data->right_y) < 0.005)rc_data->right_y = 0.0f;
 	
+	rc_data->left_x = 0.8f * rc_data->left_x + 0.2f * rc_data->last_left_x;
+	rc_data->left_y = 0.8f * rc_data->left_y + 0.2f * rc_data->last_left_y;
+	rc_data->right_x = 0.8f * rc_data->right_x + 0.2f * rc_data->last_right_x;
+	rc_data->right_y = 0.8f * rc_data->right_y + 0.2f * rc_data->last_right_y;
+	
 	my_limit(&rc_data->left_x, 1.0f);
 	my_limit(&rc_data->left_y, 1.0f);
 	my_limit(&rc_data->right_x, 1.0f);
 	my_limit(&rc_data->right_y, 1.0f);
+	
+	rc_data->last_left_x = rc_data->left_x;
+	rc_data->last_left_y = rc_data->left_y;
+	rc_data->last_right_x = rc_data->right_x;
+	rc_data->last_right_y = rc_data->right_y;
 
     return 0x00; // Success
 }
@@ -134,9 +148,6 @@ void remoteControlTask(void){
 
     while(1){
         uint8_t result = remoteControlParse(&crsf_data, &rc_data, uart1_frame_buffer, frame_data.length);
-        if(result == 0x00){
-            remoteControlParse(&crsf_data, &rc_data, uart1_frame_buffer, frame_data.length);
-        }
         
 		uint32_t time = xTaskGetTickCount();
         if(xTaskGetTickCount() - frame_data.last_time > 1000){

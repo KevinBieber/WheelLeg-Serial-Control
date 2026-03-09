@@ -195,8 +195,8 @@ I (../Core/Inc/fdcan.h)(0x69371C95)
 I (../User/Bsp/can_bsp.h)(0x69371C97)
 I (../User/Algorithm/PID/pid.h)(0x6944D9AB)
 I (../User/Algorithm/VMC/VMC_calc_version_1_1.h)(0x694F5217)
-I (../User/Algorithm/LQR/LQR.h)(0x694F522B)
-I (../User/APP/remote_control.h)(0x694F87DC)
+I (../User/Algorithm/LQR/LQR.h)(0x6974B183)
+I (../User/APP/remote_control.h)(0x69AE7B27)
 I (../Core/Inc/usart.h)(0x6947743E)
 I (../User/APP/observe_task.h)(0x694F4765)
 I (../User/APP/vofa_task.h)(0x696B6577)
@@ -478,7 +478,7 @@ I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h)(0x68454725)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h)(0x68454725)
 I (../User/Bsp/bsp_dwt.h)(0x69371C97)
 I (../Core/Inc/stm32h7xx_it.h)(0x6969E77E)
-I (../User/APP/remote_control.h)(0x694F87DC)
+I (../User/APP/remote_control.h)(0x69AE7B27)
 I (../Core/Inc/usart.h)(0x6947743E)
 F (../Core/Src/stm32h7xx_hal_msp.c)(0x69371C95)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\stm32h7xx_hal_msp.o --omf_browse ctrlboard-h7_imu\stm32h7xx_hal_msp.crf --depend ctrlboard-h7_imu\stm32h7xx_hal_msp.d)
 I (../Core/Inc/main.h)(0x69371C95)
@@ -2016,8 +2016,8 @@ I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h)(0x68454725)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h)(0x68454725)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h)(0x68454725)
 I (../User/Bsp/bsp_dwt.h)(0x69371C97)
-F (..\User\Algorithm\LQR\LQR.c)(0x696D59C4)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\lqr.o --omf_browse ctrlboard-h7_imu\lqr.crf --depend ctrlboard-h7_imu\lqr.d)
-I (..\User\Algorithm\LQR\LQR.h)(0x694F522B)
+F (..\User\Algorithm\LQR\LQR.c)(0x6974B1C2)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\lqr.o --omf_browse ctrlboard-h7_imu\lqr.crf --depend ctrlboard-h7_imu\lqr.d)
+I (..\User\Algorithm\LQR\LQR.h)(0x6974B183)
 I (../Drivers/CMSIS/DSP/Include/arm_math.h)(0x68454724)
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68454724)
 I (D:\keil\core\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -2309,8 +2309,8 @@ I (../Core/Inc/fdcan.h)(0x69371C95)
 I (../User/Bsp/can_bsp.h)(0x69371C97)
 I (../User/Algorithm/PID/pid.h)(0x6944D9AB)
 I (../User/Algorithm/VMC/VMC_calc_version_1_1.h)(0x694F5217)
-I (../User/Algorithm/LQR/LQR.h)(0x694F522B)
-I (..\User\APP\remote_control.h)(0x694F87DC)
+I (../User/Algorithm/LQR/LQR.h)(0x6974B183)
+I (..\User\APP\remote_control.h)(0x69AE7B27)
 I (../Core/Inc/usart.h)(0x6947743E)
 I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68454726)
@@ -2326,8 +2326,8 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x68454726)
-F (..\User\APP\remote_control.c)(0x694F8E10)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\remote_control.o --omf_browse ctrlboard-h7_imu\remote_control.crf --depend ctrlboard-h7_imu\remote_control.d)
-I (..\User\APP\remote_control.h)(0x694F87DC)
+F (..\User\APP\remote_control.c)(0x69AE82E0)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\remote_control.o --omf_browse ctrlboard-h7_imu\remote_control.crf --depend ctrlboard-h7_imu\remote_control.d)
+I (..\User\APP\remote_control.h)(0x69AE7B27)
 I (../Core/Inc/usart.h)(0x6947743E)
 I (../Core/Inc/main.h)(0x69371C95)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h)(0x68454725)
@@ -2387,7 +2387,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x68454726)
 I (D:\keil\core\ARM\ARMCC\include\string.h)(0x6025237E)
-F (..\User\APP\chassis_task.c)(0x696D53E3)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\chassis_task.o --omf_browse ctrlboard-h7_imu\chassis_task.crf --depend ctrlboard-h7_imu\chassis_task.d)
+F (..\User\APP\chassis_task.c)(0x69AE83F9)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\chassis_task.o --omf_browse ctrlboard-h7_imu\chassis_task.crf --depend ctrlboard-h7_imu\chassis_task.d)
 I (..\User\APP\chassis_task.h)(0x6968CCE6)
 I (../Core/Inc/main.h)(0x69371C95)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h)(0x68454725)
@@ -2445,8 +2445,8 @@ I (../User/Devices/BMI088/BMI088driver.h)(0x69371C97)
 I (../User/Algorithm/EKF/QuaternionEKF.h)(0x69371C97)
 I (../User/Algorithm/kalman/kalman_filter.h)(0x69371C97)
 I (D:\keil\core\ARM\ARMCC\include\stdlib.h)(0x60252374)
-I (../User/Algorithm/LQR/LQR.h)(0x694F522B)
-I (..\User\APP\remote_control.h)(0x694F87DC)
+I (../User/Algorithm/LQR/LQR.h)(0x6974B183)
+I (..\User\APP\remote_control.h)(0x69AE7B27)
 I (../Core/Inc/usart.h)(0x6947743E)
 I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68454726)
@@ -2462,7 +2462,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x68454726)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x68454726)
-F (..\User\APP\vofa_task.c)(0x696B82B5)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\vofa_task.o --omf_browse ctrlboard-h7_imu\vofa_task.crf --depend ctrlboard-h7_imu\vofa_task.d)
+F (..\User\APP\vofa_task.c)(0x69AE7A2B)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\vofa_task.o --omf_browse ctrlboard-h7_imu\vofa_task.crf --depend ctrlboard-h7_imu\vofa_task.d)
 I (..\User\APP\vofa_task.h)(0x696B6577)
 I (../USB_DEVICE/App/usbd_cdc_if.h)(0x6969E77E)
 I (../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h)(0x68454725)
@@ -2543,8 +2543,8 @@ I (..\User\APP\INS_task.h)(0x69371C97)
 I (../User/Devices/BMI088/BMI088driver.h)(0x69371C97)
 I (../User/Algorithm/EKF/QuaternionEKF.h)(0x69371C97)
 I (../User/Algorithm/kalman/kalman_filter.h)(0x69371C97)
-I (../User/Algorithm/LQR/LQR.h)(0x694F522B)
-I (..\User\APP\remote_control.h)(0x694F87DC)
+I (../User/Algorithm/LQR/LQR.h)(0x6974B183)
+I (..\User\APP\remote_control.h)(0x69AE7B27)
 I (../Core/Inc/usart.h)(0x6947743E)
 F (..\User\bsp\bsp_dwt.c)(0x69371C97)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\bsp_dwt.o --omf_browse ctrlboard-h7_imu\bsp_dwt.crf --depend ctrlboard-h7_imu\bsp_dwt.d)
 I (..\User\bsp\bsp_dwt.h)(0x69371C97)
@@ -2649,8 +2649,8 @@ I (../User/Devices/BMI088/BMI088driver.h)(0x69371C97)
 I (../User/Algorithm/EKF/QuaternionEKF.h)(0x69371C97)
 I (../User/Algorithm/kalman/kalman_filter.h)(0x69371C97)
 I (D:\keil\core\ARM\ARMCC\include\stdlib.h)(0x60252374)
-I (../User/Algorithm/LQR/LQR.h)(0x694F522B)
-I (../User/APP/remote_control.h)(0x694F87DC)
+I (../User/Algorithm/LQR/LQR.h)(0x6974B183)
+I (../User/APP/remote_control.h)(0x69AE7B27)
 I (../Core/Inc/usart.h)(0x6947743E)
 F (..\User\Bsp\bsp_PWM.c)(0x69371C97)(--c99 --gnu -c --cpu Cortex-M7.fp.dp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/CMSIS/DSP/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../User/Algorithm/EKF -I ../User/Algorithm/kalman -I ../User/Algorithm/mahony -I ../User/APP -I ../User/Bsp -I ../User/Devices/BMI088 -I ../User/Devices/DM_Motor -I ../User/Algorithm/VMC -I ../User/Controller -I ../User/Lib -I ../User/Algorithm/PID -I ../User/Algorithm/filter -I ../User/Algorithm/LQR -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc-I.\RTE\_CtrlBoard-H7_IMU-ID:\keil\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\keil\Keil\STM32H7xx_DFP\4.0.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx-o ctrlboard-h7_imu\bsp_pwm.o --omf_browse ctrlboard-h7_imu\bsp_pwm.crf --depend ctrlboard-h7_imu\bsp_pwm.d)
 I (..\User\Bsp\bsp_PWM.h)(0x69371C97)

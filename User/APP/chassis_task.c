@@ -44,8 +44,8 @@ void initChassisTask(void){
 	{//等待加速度收敛
 	  osDelay(1);
 	}
-    float LegR_Pid_params[3] = {800.0f, 1.0f, 0.0f};//pid参数
-    float LegL_Pid_params[3] = {1200.0f, 1.0f, 0.0f};
+    float LegR_Pid_params[3] = {500.0f, 0.0f, 1.0f};//pid参数
+    float LegL_Pid_params[3] = {800.0f, 0.0f, 1.0f};
     float Tp_Pid_params[3] = {8.0f, 0.0f, 0.5f};
     float Turn_Pid_params[3] = {0.5f, 0.01f, 0.0f};
     float Roll_Pid_params[3] = {0.15f, 0.0f, 0.0f};
@@ -63,9 +63,9 @@ void initChassisTask(void){
     PID_init(&PhiVelL_Pid, PID_DELTA, PhiVelL_Pid_params, 5.0f, 1.0f);
     PID_init(&PhiVelR_Pid, PID_DELTA, PhiVelR_Pid_params, 5.0f, 1.0f);
 	
-    bipe_chassis.leg_force_ref = 18.0f;
-	bipe_chassis.v_x_max = 1.0f;
-	bipe_chassis.w_max = 1.5f;
+    bipe_chassis.leg_force_ref = 20.0f;
+	bipe_chassis.v_x_max = 1.8f;
+	bipe_chassis.w_max = 2.5f;
 	bipe_chassis.wheel_r = 0.05f;
 	
 
@@ -200,8 +200,9 @@ void updateChassisControl(void){
     dt = (current_time - last_time) / 1000.0f;
     legPosCalc(leg_left.vmc_leg_x, leg_motor_left_velocity, dt);//计算腿部信息
     legPosCalc(leg_right.vmc_leg_x, leg_motor_right_velocity, dt);
+	
 
-    x_left[0] = leg_left.vmc_leg_x->leg_pos.phi;
+    x_left[0] = leg_left.vmc_leg_x->leg_pos.phi - phiTargetCalc(leg_left.vmc_leg_x->leg_pos.leg_length);
     x_left[1] = leg_left.vmc_leg_x->leg_pos.phi_velocity;
 	x_left[3] = leg_left.wheel_motor.para.vel * bipe_chassis.wheel_r - ctrl_data.v_x_target;
     x_left[4] = INS.Pitch;
@@ -214,7 +215,7 @@ void updateChassisControl(void){
 //    x_left[4] = 0.0f;
 //    x_left[5] = 0.0f;
 
-    x_right[0] = leg_right.vmc_leg_x->leg_pos.phi;
+    x_right[0] = leg_right.vmc_leg_x->leg_pos.phi - phiTargetCalc(leg_right.vmc_leg_x->leg_pos.leg_length);
     x_right[1] = leg_right.vmc_leg_x->leg_pos.phi_velocity;
     x_right[3] = leg_right.wheel_motor.para.vel * bipe_chassis.wheel_r - ctrl_data.v_x_target;
     x_right[4] = INS.Pitch;

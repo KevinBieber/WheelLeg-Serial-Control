@@ -4,7 +4,10 @@
 #include "arm_math.h"
 #include "chassis_task.h"
 
+extern PidTypeDef LegR_Pid;
 extern chassis_leg_t leg_left;
+extern chassis_t bipe_chassis;
+extern rc_data_t rc_data;
 
 #define MAX_BUFFER_SIZE 128
 uint8_t send_flag = 0;
@@ -43,10 +46,10 @@ void vofa_task(void){
 //		if(t > 50)t = 0;
 //		sendDataAppend(arm_sin_f32(w * t));
 		
-		sendDataAppend(leg_left.wheel_motor.para.pos);
-		sendDataAppend(leg_left.wheel_motor.pos_last);
-		sendDataAppend(leg_left.wheel_motor.para.vel);
-		
+		sendDataAppend(rc_data.right_x);
+		sendDataAppend(rc_data.right_y);
+		sendDataAppend(rc_data.left_x);
+		sendDataAppend(rc_data.left_y);
 		vofaSend();
 		
 		osDelay(2);

@@ -16,23 +16,31 @@ void initLQR(float* x_status_left, float* u_control_left, float* x_status_right,
     arm_mat_init_f32(&U_matrix_right, 2, 1, u_control_right);
 }
 
+float phiTargetCalc(float leg_length){
+    float L_1 = leg_length;
+    float L_2 = leg_length * leg_length;
+    float L_3 = leg_length * leg_length * leg_length;
+	float phi_target = 209.0047f * L_3 + -99.7388f * L_2 + 13.8301f * L_1 + -0.3304f;
+	return phi_target;
+}
+
 void LQRCalculate(float leg_length,uint8_t leg_side){//leg_side:0-left leg,1-right leg
     float L_1 = leg_length;
     float L_2 = leg_length * leg_length;
     float L_3 = leg_length * leg_length * leg_length;
 
-K_data[0] = 145.2013f * L_3 + -103.1212f * L_2 + 31.7539f * L_1 + 1.0995f;
-K_data[1] = 6.1566f * L_3 + -5.0574f * L_2 + 2.8430f * L_1 + 0.2856f;
-K_data[2] = 9.3986f * L_3 + -7.0654f * L_2 + 1.9421f * L_1 + 0.2955f;
-K_data[3] = 10.4928f * L_3 + -8.7971f * L_2 + 2.7075f * L_1 + 0.6766f;
-K_data[4] = -8.0486f * L_3 + 50.8712f * L_2 + -30.7259f * L_1 + 6.5019f;
-K_data[5] = -5.3554f * L_3 + 5.1999f * L_2 + -2.0326f * L_1 + 0.3941f;
-K_data[6] = -197.9657f * L_3 + 81.2551f * L_2 + 0.0877f * L_1 + -4.2081f;
-K_data[7] = -9.3239f * L_3 + -0.8952f * L_2 + 3.2107f * L_1 + -1.0195f;
-K_data[8] = -2.6168f * L_3 + -5.5550f * L_2 + 4.2261f * L_1 + -0.9406f;
-K_data[9] = 19.0864f * L_3 + -24.9618f * L_2 + 11.1116f * L_1 + -2.0481f;
-K_data[10] = 377.0854f * L_3 + -272.9152f * L_2 + 72.5907f * L_1 + 8.5444f;
-K_data[11] = 18.0383f * L_3 + -12.9474f * L_2 + 3.4603f * L_1 + 0.3673f;
+K_data[0] = -631.0761f * L_3 + 285.2972f * L_2 + -30.0604f * L_1 + 4.0503f;
+K_data[1] = 20.3849f * L_3 + -12.0844f * L_2 + 3.9481f * L_1 + 0.2329f;
+K_data[2] = 16.6077f * L_3 + -10.6351f * L_2 + 2.5092f * L_1 + 0.2674f;
+K_data[3] = 34.9595f * L_3 + -21.1920f * L_2 + 4.7289f * L_1 + 0.5742f;
+K_data[4] = -261.8351f * L_3 + 175.3150f * L_2 + -49.9900f * L_1 + 7.3890f;
+K_data[5] = -13.3726f * L_3 + 9.1519f * L_2 + -2.6463f * L_1 + 0.4221f;
+K_data[6] = 410.1481f * L_3 + -220.5179f * L_2 + 47.5906f * L_1 + -6.4529f;
+K_data[7] = 27.2424f * L_3 + -19.0052f * L_2 + 6.0616f * L_1 + -1.1553f;
+K_data[8] = 25.3229f * L_3 + -19.6293f * L_2 + 6.5039f * L_1 + -1.0551f;
+K_data[9] = 63.1864f * L_3 + -46.9804f * L_2 + 14.6329f * L_1 + -2.2218f;
+K_data[10] = 585.5012f * L_3 + -373.0637f * L_2 + 87.8715f * L_1 + 7.8268f;
+K_data[11] = 30.6295f * L_3 + -19.0308f * L_2 + 4.3894f * L_1 + 0.3245f;
 	
     if(leg_side == 0){
         arm_mat_mult_f32(&K_matrix, &X_matrix_left, &U_matrix_left);
