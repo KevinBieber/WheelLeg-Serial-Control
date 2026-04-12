@@ -86,3 +86,4 @@ ctrlboard-h7_imu\freertos.o: D:\keil\core\ARM\ARMCC\Bin\..\include\stdio.h
 ctrlboard-h7_imu\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 ctrlboard-h7_imu\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 ctrlboard-h7_imu\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+ctrlboard-h7_imu\freertos.o: ../User/APP/usb_receive_task.h

@@ -49,8 +49,8 @@ void initChassisTask(void){
     float Tp_Pid_params[3] = {8.0f, 0.0f, 0.5f};
     float Turn_Pid_params[3] = {0.5f, 0.01f, 0.0f};
     float Roll_Pid_params[3] = {0.15f, 0.0f, 0.0f};
-    float PhiL_Pid_params[3] = {7.0f, 0.1f, 0.1f};
-    float PhiR_Pid_params[3] = {7.0f, 0.1f, 0.1f};
+    float PhiL_Pid_params[3] = {15.0f, 0.1f, 0.1f};
+    float PhiR_Pid_params[3] = {15.0f, 0.1f, 0.1f};
     float PhiVelL_Pid_params[3] = {10.0f, 0.0f, 1.0f};
     float PhiVelR_Pid_params[3] = {10.0f, 0.0f, 1.0f};
     PID_init(&LegR_Pid, PID_DELTA, LegR_Pid_params, 50.0f, 3.0f);
@@ -161,7 +161,7 @@ void loadManualControl(void){
                 if(rc_data.swich_SD == 0){
                     ctrl_data.common_mode = CHASSIS_RUN;
                 }
-                else if(rc_data.swich_SD == 1){
+                else if(rc_data.swich_SD == 2){
                     ctrl_data.common_mode = CHASSIS_JUMP;
                     ctrl_data.jump_status = JUMP_STATE_PREPARE;
                 }
@@ -352,11 +352,11 @@ void updateChassisControl(void){
             VMCVirtual2RealCalc(leg_left.vmc_leg_x, leg_left.leg_motor_torque, leg_left.vmc_force);
             VMCVirtual2RealCalc(leg_right.vmc_leg_x, leg_right.leg_motor_torque, leg_right.vmc_force);
 
-//            if(leg_left.leg_force[1] < 12.0f && leg_right.leg_force[1] < 12.0f){
-//                //Ë«ÍÈÀëµØ
-//                ctrl_data.common_mode = CHASSIS_JUMP;
-//                ctrl_data.jump_status = JUMP_STATE_LANDING;
-//            }
+            if(leg_left.leg_force[1] < 4.0f && leg_right.leg_force[1] < 4.0f){
+                //Ë«ÍÈÀëµØ
+                ctrl_data.common_mode = CHASSIS_JUMP;
+                ctrl_data.jump_status = JUMP_STATE_LANDING;
+            }
         }
         else if(ctrl_data.common_mode == CHASSIS_JUMP){//ÌøÔ¾
             if(ctrl_data.jump_status == JUMP_STATE_PREPARE){//ÊÕÍÈ

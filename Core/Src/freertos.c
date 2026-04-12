@@ -30,6 +30,7 @@
 #include "observe_task.h"
 #include "remote_control.h"
 #include "vofa_task.h"
+#include "usb_receive_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,6 +58,7 @@ osThreadId OBSERVE_TASKHandle;
 osThreadId REMOTE_CONTROL_Handle;
 osThreadId CHASSIS_TASKHandle;
 osThreadId VOFA_TASKHandle;
+osThreadId USB_RECEIVE_TASHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -69,6 +71,7 @@ void OBSERVE_Task(void const * argument);
 void Remote_Control_Task(void const * argument);
 void Chassis_Task(void const * argument);
 void Vofa_task(void const * argument);
+void Usb_receive_task(void const * argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -123,6 +126,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of VOFA_TASK */
   osThreadDef(VOFA_TASK, Vofa_task, osPriorityLow, 0, 128);
   VOFA_TASKHandle = osThreadCreate(osThread(VOFA_TASK), NULL);
+
+  /* definition and creation of USB_RECEIVE_TAS */
+  osThreadDef(USB_RECEIVE_TAS, Usb_receive_task, osPriorityLow, 0, 256);
+  USB_RECEIVE_TASHandle = osThreadCreate(osThread(USB_RECEIVE_TAS), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -239,6 +246,24 @@ void Vofa_task(void const * argument)
     vofa_task();
   }
   /* USER CODE END Vofa_task */
+}
+
+/* USER CODE BEGIN Header_Usb_receive_task */
+/**
+* @brief Function implementing the USB_RECEIVE_TAS thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Usb_receive_task */
+void Usb_receive_task(void const * argument)
+{
+  /* USER CODE BEGIN Usb_receive_task */
+  /* Infinite loop */
+  for(;;)
+  {
+    usb_receive_task();
+  }
+  /* USER CODE END Usb_receive_task */
 }
 
 /* Private application code --------------------------------------------------*/

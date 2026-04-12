@@ -1889,6 +1889,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\APP\vofa_task.c</FilePath>
             </File>
+            <File>
+              <FileName>usb_receive_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\APP\usb_receive_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

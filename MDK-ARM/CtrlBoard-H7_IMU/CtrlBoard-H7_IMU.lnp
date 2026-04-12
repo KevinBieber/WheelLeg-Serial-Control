@@ -64,6 +64,7 @@
 "ctrlboard-h7_imu\remote_control.o"
 "ctrlboard-h7_imu\chassis_task.o"
 "ctrlboard-h7_imu\vofa_task.o"
+"ctrlboard-h7_imu\usb_receive_task.o"
 "ctrlboard-h7_imu\bsp_dwt.o"
 "ctrlboard-h7_imu\can_bsp.o"
 "ctrlboard-h7_imu\bsp_pwm.o"
