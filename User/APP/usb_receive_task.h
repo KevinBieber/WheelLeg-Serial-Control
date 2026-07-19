@@ -21,10 +21,14 @@ typedef struct {
     uint8_t data[20]; // 根据实际需求调整大小
 } UsbPacket_t;
 
+extern RobotCommand_t robot_cmd;
+
 void usbReceiveTaskInit(void);
 uint8_t usbReceive(void);
 void usb_receive_task(void);
 uint8_t checkCrc16(uint8_t *data, uint16_t length, uint16_t expected_crc);
 void getRobotCommand(void);
+/** USB 指令是否在 timeout_ms 内更新过（用于 PC 控制权） */
+uint8_t robotCmdIsFresh(uint32_t timeout_ms);
 
 #endif

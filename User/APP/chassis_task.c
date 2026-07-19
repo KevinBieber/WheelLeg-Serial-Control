@@ -1,7 +1,9 @@
 #include "chassis_task.h"
 #include "cmsis_os.h"
+#include "usb_receive_task.h"
 
 extern rc_data_t rc_data;
+
 
 extern INS_t INS;
 extern vmc_leg_t vmc_leg_left;
@@ -20,15 +22,15 @@ float u_left[2] = {0.0f};
 float u_right[2] = {0.0f};
 ctrl_data_t ctrl_data;
 
-PidTypeDef LegR_Pid;//ÓÒÍÈµÄÍÈ³¤pd
-PidTypeDef LegL_Pid;//×óÍÈµÄÍÈ³¤pd
-PidTypeDef Tp_Pid;//·ÀÅü²æ²¹³¥pd
-PidTypeDef Turn_Pid;//×ªÏòpd
-PidTypeDef Roll_Pid;//ºá¹ö½Ç²¹³¥pd
-PidTypeDef PhiL_Pid;//×óÍÈ°Ú½Ç²¹³¥pd
-PidTypeDef PhiR_Pid;//ÓÒÍÈ°Ú½Ç²¹³¥pd
-PidTypeDef PhiVelL_Pid;//×óÍÈ°Ú½ÇËÙ¶È²¹³¥pd
-PidTypeDef PhiVelR_Pid;//ÓÒÍÈ°Ú½ÇËÙ¶È²¹³¥pd
+PidTypeDef LegR_Pid;//ï¿½ï¿½ï¿½Èµï¿½ï¿½È³ï¿½pd
+PidTypeDef LegL_Pid;//ï¿½ï¿½ï¿½Èµï¿½ï¿½È³ï¿½pd
+PidTypeDef Tp_Pid;//ï¿½ï¿½ï¿½ï¿½ï¿½æ²¹ï¿½ï¿½pd
+PidTypeDef Turn_Pid;//×ªï¿½ï¿½pd
+PidTypeDef Roll_Pid;//ï¿½ï¿½ï¿½ï¿½Ç²ï¿½ï¿½ï¿½pd
+PidTypeDef PhiL_Pid;//ï¿½ï¿½ï¿½È°Ú½Ç²ï¿½ï¿½ï¿½pd
+PidTypeDef PhiR_Pid;//ï¿½ï¿½ï¿½È°Ú½Ç²ï¿½ï¿½ï¿½pd
+PidTypeDef PhiVelL_Pid;//ï¿½ï¿½ï¿½È°Ú½ï¿½ï¿½Ù¶È²ï¿½ï¿½ï¿½pd
+PidTypeDef PhiVelR_Pid;//ï¿½ï¿½ï¿½È°Ú½ï¿½ï¿½Ù¶È²ï¿½ï¿½ï¿½pd
 
 void mylimit_float(float* in, float maxlimit, float minlimit){
     if(*in > maxlimit){
@@ -41,10 +43,10 @@ void mylimit_float(float* in, float maxlimit, float minlimit){
 
 void initChassisTask(void){
 	while(INS.ins_flag==0)
-	{//µÈ´ý¼ÓËÙ¶ÈÊÕÁ²
+	{//ï¿½È´ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½ï¿½
 	  osDelay(1);
 	}
-    float LegR_Pid_params[3] = {500.0f, 0.0f, 1.0f};//pid²ÎÊý
+    float LegR_Pid_params[3] = {500.0f, 0.0f, 1.0f};//pidï¿½ï¿½ï¿½ï¿½
     float LegL_Pid_params[3] = {800.0f, 0.0f, 1.0f};
     float Tp_Pid_params[3] = {8.0f, 0.0f, 0.5f};
     float Turn_Pid_params[3] = {0.5f, 0.01f, 0.0f};
@@ -94,7 +96,7 @@ void initChassisTask(void){
 	}
 	for(int j=0;j<5;j++)
 	{
-        enable_motor_mode(&hfdcan1,leg_left.wheel_motor.para.id,leg_left.wheel_motor.mode);//×ó±ßÂÖì±µç»ú
+        enable_motor_mode(&hfdcan1,leg_left.wheel_motor.para.id,leg_left.wheel_motor.mode);//ï¿½ï¿½ï¿½ï¿½ï¿½ì±µï¿½ï¿½
 	    osDelay(1);
 	}
 	for(int j=0;j<5;j++)
@@ -109,7 +111,7 @@ void initChassisTask(void){
 	}
 	for(int j=0;j<5;j++)
 	{
-        enable_motor_mode(&hfdcan1,leg_right.wheel_motor.para.id,leg_right.wheel_motor.mode);//ÓÒ±ßÂÖì±µç»ú
+        enable_motor_mode(&hfdcan1,leg_right.wheel_motor.para.id,leg_right.wheel_motor.mode);//ï¿½Ò±ï¿½ï¿½ï¿½ì±µï¿½ï¿½
 	    osDelay(1);
 	}
 
@@ -119,15 +121,19 @@ void initChassisTask(void){
 }
 
 void loadManualControl(void){
+    /* SB: up=2 RC only; mid=1 both; down=0 PC only. SA always from RC. */
+    #define PC_CMD_TIMEOUT_MS  500U
+
     if(rc_data.state == REMOTE_ON){
-        //Ä£Ê½ÇÐ»»
         static uint8_t last_SA = 0;
         static uint8_t last_SB = 0;
-        static uint8_t last_SC = 0;
         static uint8_t last_SD = 0;
+        static uint8_t last_pc_mode = 0xFF;
 
-		if(rc_data.swich_SA == 3)rc_data.swich_SA = last_SA;
-		
+        if(rc_data.swich_SA == 3) rc_data.swich_SA = last_SA;
+        if(rc_data.swich_SB == 3) rc_data.swich_SB = last_SB;
+        if(rc_data.swich_SD == 3) rc_data.swich_SD = last_SD;
+
         if(rc_data.swich_SA != last_SA){
             if(rc_data.swich_SA == 0){
                 ctrl_data.chassis_status = CHASSIS_STATE_REST;
@@ -135,38 +141,98 @@ void loadManualControl(void){
             else if(rc_data.swich_SA == 2){
                 ctrl_data.chassis_status = CHASSIS_STATE_STANDUP;
                 ctrl_data.standup_status = STANDUP_STATE_START;
-//				ctrl_data.chassis_status = CHASSIS_STATE_COMMON;
-//				ctrl_data.common_mode = CHASSIS_RUN;
             }
-
             last_SA = rc_data.swich_SA;
         }
+        last_SB = rc_data.swich_SB;
+
+        uint8_t allow_rc = (rc_data.swich_SB == 2) || (rc_data.swich_SB == 1);
+        uint8_t allow_pc = (rc_data.swich_SB == 0) || (rc_data.swich_SB == 1);
+        uint8_t pc_fresh = robotCmdIsFresh(PC_CMD_TIMEOUT_MS);
 
         if(ctrl_data.chassis_status == CHASSIS_STATE_COMMON){
-            //ËÙ¶È¿ØÖÆ
-            ctrl_data.v_x_target = rc_data.left_y * bipe_chassis.v_x_max;
-            ctrl_data.w_target = -rc_data.left_x * bipe_chassis.w_max;
-            
-            //Õý³£ÅÜ
-            if(ctrl_data.common_mode == CHASSIS_RUN){
-                //ÍÈ³¤
-				bipe_chassis.leg_length_left_target = 0.15f + 0.06f * rc_data.right_y;
-				bipe_chassis.leg_length_right_target = 0.15f + 0.06f * rc_data.right_y;
-				bipe_chassis.leg_phi_left_target = PI / 3.0f * rc_data.left_x;
-				bipe_chassis.leg_phi_right_target = PI / 3.0f * rc_data.left_x;
+            float vx_rc = 0.0f;
+            float w_rc = 0.0f;
+            float leg_rc = 0.15f;
+            float vx_pc = 0.0f;
+            float w_pc = 0.0f;
+            float leg_pc = 0.15f;
+            uint8_t use_pc_leg = 0;
+
+            if(allow_rc){
+                vx_rc = rc_data.left_y * bipe_chassis.v_x_max;
+                w_rc = -rc_data.left_x * bipe_chassis.w_max;
+                if(ctrl_data.common_mode == CHASSIS_RUN){
+                    leg_rc = 0.15f + 0.06f * rc_data.right_y;
+                    bipe_chassis.leg_phi_left_target = PI / 3.0f * rc_data.left_x;
+                    bipe_chassis.leg_phi_right_target = PI / 3.0f * rc_data.left_x;
+                }
             }
 
-            //ÌøÔ¾ÇÐ»»
-            if(rc_data.swich_SD != last_SD){
-                if(rc_data.swich_SD == 0){
-                    ctrl_data.common_mode = CHASSIS_RUN;
-                }
-                else if(rc_data.swich_SD == 2){
-                    ctrl_data.common_mode = CHASSIS_JUMP;
-                    ctrl_data.jump_status = JUMP_STATE_PREPARE;
-                }
+            if(allow_pc && pc_fresh){
+                vx_pc = robot_cmd.vel_x;
+                w_pc = robot_cmd.vel_w;
+                leg_pc = robot_cmd.leg_length;
+                use_pc_leg = 1;
+            }
 
-                last_SD = rc_data.swich_SD;
+            if(allow_rc && allow_pc){
+                ctrl_data.v_x_target = vx_rc + vx_pc;
+                ctrl_data.w_target = w_rc + w_pc;
+            }else if(allow_rc){
+                ctrl_data.v_x_target = vx_rc;
+                ctrl_data.w_target = w_rc;
+            }else{
+                ctrl_data.v_x_target = vx_pc;
+                ctrl_data.w_target = w_pc;
+            }
+            mylimit_float(&ctrl_data.v_x_target, bipe_chassis.v_x_max, -bipe_chassis.v_x_max);
+            mylimit_float(&ctrl_data.w_target, bipe_chassis.w_max, -bipe_chassis.w_max);
+
+            if(ctrl_data.common_mode == CHASSIS_RUN){
+                float leg = leg_rc;
+                if(use_pc_leg){
+                    leg = leg_pc;
+                }else if(allow_rc){
+                    leg = leg_rc;
+                }
+                bipe_chassis.leg_length_left_target = leg;
+                bipe_chassis.leg_length_right_target = leg;
+                mylimit_float(&bipe_chassis.leg_length_left_target, 0.20f, 0.10f);
+                mylimit_float(&bipe_chassis.leg_length_right_target, 0.20f, 0.10f);
+            }
+
+            if(allow_rc){
+                if(rc_data.swich_SD != last_SD){
+                    if(rc_data.swich_SD == 0){
+                        ctrl_data.common_mode = CHASSIS_RUN;
+                    }
+                    else if(rc_data.swich_SD == 2){
+                        ctrl_data.common_mode = CHASSIS_JUMP;
+                        ctrl_data.jump_status = JUMP_STATE_PREPARE;
+                    }
+                    last_SD = rc_data.swich_SD;
+                }
+            }
+
+            if(allow_pc && pc_fresh){
+                if(robot_cmd.control_mode != last_pc_mode){
+                    if(robot_cmd.control_mode == 2){
+                        ctrl_data.common_mode = CHASSIS_JUMP;
+                        ctrl_data.jump_status = JUMP_STATE_PREPARE;
+                    }
+                    else if(robot_cmd.control_mode == 0){
+                        if(ctrl_data.common_mode == CHASSIS_JUMP &&
+                           (ctrl_data.jump_status == JUMP_STATE_NONE ||
+                            ctrl_data.jump_status == JUMP_STATE_LANDING)){
+                            ctrl_data.common_mode = CHASSIS_RUN;
+                            ctrl_data.jump_status = JUMP_STATE_NONE;
+                        }
+                    }
+                    last_pc_mode = robot_cmd.control_mode;
+                }
+            }else{
+                last_pc_mode = 0xFF;
             }
         }
     }
@@ -185,9 +251,9 @@ void updateChassisControl(void){
     float leg_motor_left_velocity[2] = {0.0f};
     float leg_motor_right_velocity[2] = {0.0f};
 
-    leg_motor_left[0] = leg_left.leg_motor[0].para.pos;//½Ç¶È½ÃÕý
+    leg_motor_left[0] = leg_left.leg_motor[0].para.pos;//ï¿½Ç¶È½ï¿½ï¿½ï¿½
     leg_motor_left[1] = leg_left.leg_motor[1].para.pos;
-    leg_motor_right[0] = leg_right.leg_motor[0].para.pos;//½Ç¶È½ÃÕý
+    leg_motor_right[0] = leg_right.leg_motor[0].para.pos;//ï¿½Ç¶È½ï¿½ï¿½ï¿½
     leg_motor_right[1] = leg_right.leg_motor[1].para.pos;
     leg_motor_left_velocity[0] = leg_left.leg_motor[0].para.vel;
     leg_motor_left_velocity[1] = leg_left.leg_motor[1].para.vel;
@@ -198,7 +264,7 @@ void updateChassisControl(void){
     VMCDataPrepare(leg_right.vmc_leg_x, leg_motor_right);
     current_time = xTaskGetTickCount();
     dt = (current_time - last_time) / 1000.0f;
-    legPosCalc(leg_left.vmc_leg_x, leg_motor_left_velocity, dt);//¼ÆËãÍÈ²¿ÐÅÏ¢
+    legPosCalc(leg_left.vmc_leg_x, leg_motor_left_velocity, dt);//ï¿½ï¿½ï¿½ï¿½ï¿½È²ï¿½ï¿½ï¿½Ï¢
     legPosCalc(leg_right.vmc_leg_x, leg_motor_right_velocity, dt);
 	
 
@@ -237,7 +303,7 @@ void updateChassisControl(void){
 //    x_right[5] = 0.0f;
 
 
-    //ÀëµØ¼ì²â
+    //ï¿½ï¿½Ø¼ï¿½ï¿½
     float real_leg_torque_left[2] = {0.0f, 0.0f};
     float real_leg_torque_right[2] = {0.0f, 0.0f};
     float real_leg_force_left[2] = {0.0f, 0.0f};
@@ -261,9 +327,9 @@ void updateChassisControl(void){
         leg_right.leg_motor_torque[1] = 0.0f;
         leg_right.wheel_motor_torque = 0.0f;
     }
-    else if(ctrl_data.chassis_status == CHASSIS_STATE_STANDUP){//ÆðÁ¢
+    else if(ctrl_data.chassis_status == CHASSIS_STATE_STANDUP){//ï¿½ï¿½ï¿½ï¿½
         if(ctrl_data.standup_status == STANDUP_STATE_START){
-            //ÔÝÊ±²»Ð´×ªÍÈ  
+            //ï¿½ï¿½Ê±ï¿½ï¿½Ð´×ªï¿½ï¿½  
             ctrl_data.standup_status = STANDUP_STATE_MID;
         }
         else if(ctrl_data.standup_status == STANDUP_STATE_MID){
@@ -279,7 +345,7 @@ void updateChassisControl(void){
             leg_left.vmc_force[1] = LegL_Pid.out;
             leg_right.vmc_force[1] = LegR_Pid.out;
 
-            PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ÕâÀïÀ­»ØÓÃµÄÊÇµ¥»·£¬Èç¹ûÐ§¹û²»ºÃÐèÒª¸Ä³ÉË«»·
+            PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä³ï¿½Ë«ï¿½ï¿½
             PID_Calc(&PhiR_Pid, leg_right.vmc_leg_x->leg_pos.phi, 0.0f);
             leg_left.vmc_force[0] = PhiL_Pid.out;
             leg_right.vmc_force[0] = PhiR_Pid.out;
@@ -298,14 +364,14 @@ void updateChassisControl(void){
             }
         }
         else if(ctrl_data.standup_status == STANDUP_STATE_END){
-            //Õ¾Á¢½áÊø£¬½øÈëÕý³£×´Ì¬
+            //Õ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
             ctrl_data.chassis_status = CHASSIS_STATE_COMMON;
             ctrl_data.common_mode = CHASSIS_RUN;
         }
     }
-    else if(ctrl_data.chassis_status == CHASSIS_STATE_COMMON){//Õý³£ÅÜÌø¿ØÖÆ
-        if(ctrl_data.common_mode == CHASSIS_RUN){//Õý³£Ç°½ø
-            //ÇåÁãµç»úÁ¦
+    else if(ctrl_data.chassis_status == CHASSIS_STATE_COMMON){//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        if(ctrl_data.common_mode == CHASSIS_RUN){//ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             leg_left.wheel_motor_torque = 0.0f;
             leg_left.leg_motor_torque[0] = 0.0f;
             leg_left.leg_motor_torque[1] = 0.0f;
@@ -316,28 +382,28 @@ void updateChassisControl(void){
             leg_right.leg_motor_torque[1] = 0.0f;
             leg_right.vmc_force[0] = 0.0f;
             leg_right.vmc_force[1] = 0.0f;
-			//²âÊÔ°Ú½Ç»·ÓÃ
+			//ï¿½ï¿½ï¿½Ô°Ú½Ç»ï¿½ï¿½ï¿½
 //            PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, bipe_chassis.leg_phi_left_target);
 //            PID_Calc(&PhiR_Pid, leg_right.vmc_leg_x->leg_pos.phi, bipe_chassis.leg_phi_right_target);
 //            leg_left.vmc_force[0] = PhiL_Pid.out;
 //            leg_right.vmc_force[0] = PhiR_Pid.out;
-            //Åü²æ»·
+            //ï¿½ï¿½ï¿½æ»·
             PID_Calc(&Tp_Pid, leg_left.vmc_leg_x->leg_pos.phi - leg_right.vmc_leg_x->leg_pos.phi, 0.0f);
             leg_left.vmc_force[0] += Tp_Pid.out;
             leg_right.vmc_force[0] -= Tp_Pid.out;
-            //roll»·
+            //rollï¿½ï¿½
             PID_Calc(&Roll_Pid, INS.Roll, 0.0f);
             bipe_chassis.leg_length_left_target += Roll_Pid.out;
             bipe_chassis.leg_length_right_target -= Roll_Pid.out;
 			
 			mylimit_float(&bipe_chassis.leg_length_left_target,0.20f,0.10f);
 			mylimit_float(&bipe_chassis.leg_length_right_target,0.20f,0.10f);
-            //ÍÈ³¤»·
+            //ï¿½È³ï¿½ï¿½ï¿½
             PID_Calc(&LegL_Pid, leg_left.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_left_target);
             PID_Calc(&LegR_Pid, leg_right.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_right_target);
             leg_left.vmc_force[1] = LegL_Pid.out + bipe_chassis.leg_force_ref;
             leg_right.vmc_force[1] = LegR_Pid.out + bipe_chassis.leg_force_ref;
-            //×ªÏò»·
+            //×ªï¿½ï¿½
 			PID_Calc(&Turn_Pid, INS.Gyro[2], ctrl_data.w_target);
             leg_left.wheel_motor_torque -= Turn_Pid.out;
             leg_right.wheel_motor_torque += Turn_Pid.out;
@@ -348,18 +414,18 @@ void updateChassisControl(void){
             LQRCalculate(leg_right.vmc_leg_x->leg_pos.leg_length, 1);
             leg_right.wheel_motor_torque += u_right[0];
             leg_right.vmc_force[0] += u_right[1];
-            //ÐéÄâÁ¦×ªµç»úÁ¦
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½
             VMCVirtual2RealCalc(leg_left.vmc_leg_x, leg_left.leg_motor_torque, leg_left.vmc_force);
             VMCVirtual2RealCalc(leg_right.vmc_leg_x, leg_right.leg_motor_torque, leg_right.vmc_force);
 
             if(leg_left.leg_force[1] < 4.0f && leg_right.leg_force[1] < 4.0f){
-                //Ë«ÍÈÀëµØ
+                //Ë«ï¿½ï¿½ï¿½ï¿½ï¿½
                 ctrl_data.common_mode = CHASSIS_JUMP;
                 ctrl_data.jump_status = JUMP_STATE_LANDING;
             }
         }
-        else if(ctrl_data.common_mode == CHASSIS_JUMP){//ÌøÔ¾
-            if(ctrl_data.jump_status == JUMP_STATE_PREPARE){//ÊÕÍÈ
+        else if(ctrl_data.common_mode == CHASSIS_JUMP){//ï¿½ï¿½Ô¾
+            if(ctrl_data.jump_status == JUMP_STATE_PREPARE){//ï¿½ï¿½ï¿½ï¿½
                 bipe_chassis.leg_length_left_target = 0.10f;
                 bipe_chassis.leg_length_right_target = 0.10f;
                 PID_Calc(&LegL_Pid, leg_left.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_left_target);
@@ -367,12 +433,12 @@ void updateChassisControl(void){
                 leg_left.vmc_force[1] = LegL_Pid.out + bipe_chassis.leg_force_ref;
                 leg_right.vmc_force[1] = LegR_Pid.out + bipe_chassis.leg_force_ref;
 
-                PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ÕâÀïÀ­»ØÓÃµÄÊÇµ¥»·£¬Èç¹ûÐ§¹û²»ºÃÐèÒª¸Ä³ÉË«»·
+                PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä³ï¿½Ë«ï¿½ï¿½
                 PID_Calc(&PhiR_Pid, leg_right.vmc_leg_x->leg_pos.phi, 0.0f);
                 leg_left.vmc_force[0] = PhiL_Pid.out;
                 leg_right.vmc_force[0] = PhiR_Pid.out;
 
-                //ÐéÄâÁ¦×ªµç»úÁ¦
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½
                 VMCVirtual2RealCalc(leg_left.vmc_leg_x, leg_left.leg_motor_torque, leg_left.vmc_force);
                 VMCVirtual2RealCalc(leg_right.vmc_leg_x, leg_right.leg_motor_torque, leg_right.vmc_force);
 
@@ -386,17 +452,17 @@ void updateChassisControl(void){
                     PID_clear(&PhiR_Pid);
                 }
             }
-            else if(ctrl_data.jump_status == JUMP_STATE_TAKEOFF)//µÅÍÈ
+            else if(ctrl_data.jump_status == JUMP_STATE_TAKEOFF)//ï¿½ï¿½ï¿½ï¿½
             {
                 leg_left.vmc_force[1] = 100.0f;
                 leg_right.vmc_force[1] = 100.0f;
 
-                PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ÕâÀïÀ­»ØÓÃµÄÊÇµ¥»·£¬Èç¹ûÐ§¹û²»ºÃÐèÒª¸Ä³ÉË«»·
+                PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä³ï¿½Ë«ï¿½ï¿½
                 PID_Calc(&PhiR_Pid, leg_right.vmc_leg_x->leg_pos.phi, 0.0f);
                 leg_left.vmc_force[0] = PhiL_Pid.out;
                 leg_right.vmc_force[0] = PhiR_Pid.out;
 
-                //ÐéÄâÁ¦×ªµç»úÁ¦
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½
                 VMCVirtual2RealCalc(leg_left.vmc_leg_x, leg_left.leg_motor_torque, leg_left.vmc_force);
                 VMCVirtual2RealCalc(leg_right.vmc_leg_x, leg_right.leg_motor_torque, leg_right.vmc_force);
 
@@ -406,21 +472,21 @@ void updateChassisControl(void){
                     PID_clear(&PhiR_Pid);
                 }
             }
-            else if(ctrl_data.jump_status == JUMP_STATE_FLIGHT)//×î¸ß´¦ÊÕÍÈ
+            else if(ctrl_data.jump_status == JUMP_STATE_FLIGHT)//ï¿½ï¿½ß´ï¿½ï¿½ï¿½ï¿½ï¿½
             {
                 bipe_chassis.leg_length_left_target = 0.10f;
                 bipe_chassis.leg_length_right_target = 0.10f;
                 PID_Calc(&LegL_Pid, leg_left.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_left_target);
                 PID_Calc(&LegR_Pid, leg_right.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_right_target);
-                leg_left.vmc_force[1] = LegL_Pid.out - bipe_chassis.leg_force_ref;//ÊÕÍÈ±ä¸ººÅ
+                leg_left.vmc_force[1] = LegL_Pid.out - bipe_chassis.leg_force_ref;//ï¿½ï¿½ï¿½È±ä¸ºï¿½ï¿½
                 leg_right.vmc_force[1] = LegR_Pid.out - bipe_chassis.leg_force_ref;
 
-                PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ÕâÀïÀ­»ØÓÃµÄÊÇµ¥»·£¬Èç¹ûÐ§¹û²»ºÃÐèÒª¸Ä³ÉË«»·
+                PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä³ï¿½Ë«ï¿½ï¿½
                 PID_Calc(&PhiR_Pid, leg_right.vmc_leg_x->leg_pos.phi, 0.0f);
                 leg_left.vmc_force[0] = PhiL_Pid.out;
                 leg_right.vmc_force[0] = PhiR_Pid.out;
 
-                //ÐéÄâÁ¦×ªµç»úÁ¦
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½
                 VMCVirtual2RealCalc(leg_left.vmc_leg_x, leg_left.leg_motor_torque, leg_left.vmc_force);
                 VMCVirtual2RealCalc(leg_right.vmc_leg_x, leg_right.leg_motor_torque, leg_right.vmc_force);
 
@@ -434,7 +500,7 @@ void updateChassisControl(void){
                     PID_clear(&PhiR_Pid);
                 }
             }
-            else if(ctrl_data.jump_status == JUMP_STATE_LANDING){//ÂäµØÉìÍÈ
+            else if(ctrl_data.jump_status == JUMP_STATE_LANDING){//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 bipe_chassis.leg_length_left_target = 0.20f;
                 bipe_chassis.leg_length_right_target = 0.20f;
                 PID_Calc(&LegL_Pid, leg_left.vmc_leg_x->leg_pos.leg_length, bipe_chassis.leg_length_left_target);
@@ -442,17 +508,17 @@ void updateChassisControl(void){
                 leg_left.vmc_force[1] = LegL_Pid.out + bipe_chassis.leg_force_ref;
                 leg_right.vmc_force[1] = LegR_Pid.out + bipe_chassis.leg_force_ref;
 
-                PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ÕâÀïÀ­»ØÓÃµÄÊÇµ¥»·£¬Èç¹ûÐ§¹û²»ºÃÐèÒª¸Ä³ÉË«»·
+                PID_Calc(&PhiL_Pid, leg_left.vmc_leg_x->leg_pos.phi, 0.0f);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä³ï¿½Ë«ï¿½ï¿½
                 PID_Calc(&PhiR_Pid, leg_right.vmc_leg_x->leg_pos.phi, 0.0f);
                 leg_left.vmc_force[0] = PhiL_Pid.out;
                 leg_right.vmc_force[0] = PhiR_Pid.out;
 
-                //ÐéÄâÁ¦×ªµç»úÁ¦
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½
                 VMCVirtual2RealCalc(leg_left.vmc_leg_x, leg_left.leg_motor_torque, leg_left.vmc_force);
                 VMCVirtual2RealCalc(leg_right.vmc_leg_x, leg_right.leg_motor_torque, leg_right.vmc_force);
 
                 if(leg_left.leg_force[1] > 15.0f && leg_right.leg_force[1] > 15.0f){
-                    //Ë«ÍÈ×ÅµØ
+                    //Ë«ï¿½ï¿½ï¿½Åµï¿½
                     ctrl_data.common_mode = CHASSIS_RUN;
                     ctrl_data.jump_status = JUMP_STATE_NONE;
                 }
@@ -462,7 +528,7 @@ void updateChassisControl(void){
         }
     }
     else{
-        //¹ÊÕÏ×´Ì¬£¬È«²¿Ê§ÄÜ
+        //ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½È«ï¿½ï¿½Ê§ï¿½ï¿½
         leg_left.leg_motor_torque[0] = 0.0f;
         leg_left.leg_motor_torque[1] = 0.0f;
         leg_left.wheel_motor_torque = 0.0f;

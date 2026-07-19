@@ -2,6 +2,11 @@
 #include <stdint.h>
 #include <string.h>
 #include "cmsis_os.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+/* 最近一次成功解析 robot_cmd 的 tick */
+static uint32_t robot_cmd_last_tick = 0;
 
 #define USB_RECEIVE_BUF_SIZE 256 // usb接收缓冲区
 #define USB_DATA_BUF_SIZE 128 // 反转义后的数据缓冲区
@@ -145,14 +150,20 @@ float bytesToFloat(uint8_t* b) {
 }
 
 void getRobotCommand(void) {
-    // 协议规定 data 部分是 5 个大端序 float
-    // 分别对应: vel_x, vel_y, vel_w, leg_length, control_mode
-    
+    // 协议规定 data：vel_x, vel_y, vel_w, leg_length 为大端 float，其后 1 字节 control_mode
     robot_cmd.vel_x        = bytesToFloat(&usb_packet.data[0]);
     robot_cmd.vel_y        = bytesToFloat(&usb_packet.data[4]);
     robot_cmd.vel_w        = bytesToFloat(&usb_packet.data[8]);
     robot_cmd.leg_length   = bytesToFloat(&usb_packet.data[12]);
     robot_cmd.control_mode = usb_packet.data[16];
+    robot_cmd_last_tick    = xTaskGetTickCount();
+}
+
+uint8_t robotCmdIsFresh(uint32_t timeout_ms) {
+    if(robot_cmd_last_tick == 0) {
+        return 0;
+    }
+    return (uint8_t)((xTaskGetTickCount() - robot_cmd_last_tick) <= timeout_ms);
 }
 
 void usb_receive_task(void){
