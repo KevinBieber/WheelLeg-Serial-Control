@@ -14,8 +14,8 @@ def generate_launch_description() -> LaunchDescription:
         [
             DeclareLaunchArgument(
                 "dry_run",
-                default_value="true",
-                description="true=只打印USB帧；实机联调 false",
+                default_value="false",
+                description="true=只打印USB帧；false=实机写串口（默认）",
             ),
             DeclareLaunchArgument("serial_port", default_value="/dev/ttyACM0"),
             DeclareLaunchArgument(
@@ -30,7 +30,8 @@ def generate_launch_description() -> LaunchDescription:
                 output="screen",
                 parameters=[
                     {
-                        "dry_run": ParameterValue(dry_run, value_type=bool),
+                        # 用字符串传 bool，避免 LaunchConfiguration 转换踩坑
+                        "dry_run": ParameterValue(dry_run, value_type=str),
                         "serial_port": serial_port,
                         "baudrate": 115200,
                     }

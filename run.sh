@@ -18,7 +18,7 @@ usage() {
   frpc-log  跟踪 frpc 最新日志
 
 环境变量（start 时可选）:
-  DRY_RUN=false              实机写 H7 串口（默认 true）
+  DRY_RUN=false              实机写 H7 串口（默认 false；调试可 true）
   SERIAL_PORT=/dev/ttyACM0
   CAMERA_INDEX=4                 # D435i 彩色 /dev/video4；可覆盖
   FRPC_BIN=/home/jianghaoran/Workspace/frp/frpc   # 可执行文件或所在目录

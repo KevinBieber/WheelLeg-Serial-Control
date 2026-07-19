@@ -67,7 +67,7 @@ set -u
 
 SERIAL_PORT="${SERIAL_PORT:-/dev/ttyACM0}"
 CAMERA_INDEX="${CAMERA_INDEX:-4}"
-DRY_RUN="${DRY_RUN:-true}"
+DRY_RUN="${DRY_RUN:-false}"
 
 STAMP="$(date +%Y%m%d_%H%M%S)"
 LOG_FILE="${LOG_DIR}/bringup_${STAMP}.log"

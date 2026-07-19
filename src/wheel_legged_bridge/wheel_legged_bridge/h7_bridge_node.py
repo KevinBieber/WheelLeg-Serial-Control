@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import json
 import struct
+import time
+from pathlib import Path
 from typing import Optional
 
 import rclpy
@@ -93,19 +95,6 @@ def build_cmd_frame(
     leg_length: float,
     control_mode: int,
 ) -> bytes:
-    """组一帧控制指令（线上字节流）。
-
-    反转义后布局：
-      [0]     SOF 0xFD
-      [1]     msg_type = 0x01
-      [2]     app_id   = 0x02
-      [3:5]   length   大端 = payload 字节数
-      [5:5+L] payload  4×float 大端 + control_mode(u8)  → L=17
-      [5+L:7+L] CRC16 大端（对 [1 .. 5+L) 即 msg..payload）
-      [7+L]   EOF 0xF8
-
-    校验关系：反转义后总长 buf_length == length + 8
-    """
     payload = struct.pack(
         ">ffffB",
         float(vel_x),
@@ -125,8 +114,20 @@ def build_cmd_frame(
     ) + payload
     crc = crc16_h7(header_and_payload)
     body = header_and_payload + bytes([(crc >> 8) & 0xFF, crc & 0xFF])
-    # 关键：SOF / EOF 原样发送；只转义中间 body
     return bytes([SOF]) + escape_body(body) + bytes([EOF])
+
+
+def _list_acm_ports() -> list[str]:
+    return sorted(str(p) for p in Path("/dev").glob("ttyACM*") if p.exists())
+
+
+def _parse_bool(value) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return bool(value)
+    s = str(value).strip().lower()
+    return s in ("1", "true", "yes", "on")
 
 
 class H7BridgeNode(Node):
@@ -134,28 +135,120 @@ class H7BridgeNode(Node):
         super().__init__("h7_bridge")
         self.declare_parameter("serial_port", "/dev/ttyACM0")
         self.declare_parameter("baudrate", 115200)
-        self.declare_parameter("dry_run", True)
+        # 用字符串，避免 launch 传入 "false" 与 bool 声明冲突
+        self.declare_parameter("dry_run", "false")
 
         port = self.get_parameter("serial_port").get_parameter_value().string_value
         baud = int(self.get_parameter("baudrate").value)
-        self.dry_run = bool(self.get_parameter("dry_run").value)
-
+        self.dry_run = _parse_bool(self.get_parameter("dry_run").value)
+        self._port_name = port
+        self._baud = baud
         self._ser: Optional["serial.Serial"] = None
-        if not self.dry_run and serial is not None:
-            try:
-                self._ser = serial.Serial(port, baudrate=baud, timeout=0.05)
-                self.get_logger().info(f"opened serial {port} @ {baud}")
-            except Exception as e:  # noqa: BLE001
-                self.get_logger().error(f"serial open failed: {e}; fallback dry_run")
-                self.dry_run = True
+        self._tx_ok = 0
+        self._tx_fail = 0
+        self._rx_cmd = 0
+        self._last_hex = ""
+
+        if serial is None:
+            self.get_logger().error("未安装 pyserial（python3-serial），无法写 USB")
+            self.dry_run = True
+
+        if self.dry_run:
+            self.get_logger().warn(
+                "dry_run=true → 只打印帧，不写串口。"
+                "实机请: DRY_RUN=false ./run.sh start"
+            )
         else:
-            self.get_logger().warn("dry_run=true 或无 pyserial，仅打印帧不写串口")
+            self._open_serial()
 
         self.status_pub = self.create_publisher(String, "/wheel_legged/status", 10)
-        self.create_subscription(String, "/wheel_legged/cmd", self._on_cmd, 10)
-        self.create_timer(0.05, self._on_timer)
+        self.create_subscription(String, "/wheel_legged/cmd", self._on_cmd, 50)
+        self.create_timer(0.5, self._on_timer)
+        self.create_timer(2.0, self._log_tx_stats)
+
+    def _open_serial(self) -> bool:
+        if serial is None:
+            return False
+        if self._ser is not None:
+            try:
+                self._ser.close()
+            except Exception:  # noqa: BLE001
+                pass
+            self._ser = None
+
+        candidates = []
+        if self._port_name:
+            candidates.append(self._port_name)
+        for p in _list_acm_ports():
+            if p not in candidates:
+                candidates.append(p)
+
+        last_err = None
+        for port in candidates:
+            try:
+                ser = serial.Serial(
+                    port=port,
+                    baudrate=self._baud,
+                    timeout=0.05,
+                    write_timeout=0.2,
+                )
+                # 部分 CDC 设备需要拉高 DTR 才真正收数
+                try:
+                    ser.dtr = True
+                    ser.rts = True
+                except Exception:  # noqa: BLE001
+                    pass
+                time.sleep(0.05)
+                ser.reset_input_buffer()
+                ser.reset_output_buffer()
+                self._ser = ser
+                self._port_name = port
+                self.get_logger().info(
+                    f"USB LIVE: opened {port} @ {self._baud}  "
+                    f"acm_list={_list_acm_ports()}"
+                )
+                return True
+            except Exception as e:  # noqa: BLE001
+                last_err = e
+                self.get_logger().warn(f"open {port} failed: {e}")
+
+        self.get_logger().error(
+            f"无法打开任何串口（尝试 {candidates}），last={last_err}；"
+            "请检查 H7 USB、权限: ls -l /dev/ttyACM* ; groups"
+        )
+        return False
+
+    def _write_frame(self, frame: bytes) -> bool:
+        if self.dry_run:
+            self._last_hex = frame.hex()
+            return False
+        if self._ser is None or not self._ser.is_open:
+            if not self._open_serial():
+                self._tx_fail += 1
+                return False
+        try:
+            n = self._ser.write(frame)
+            self._ser.flush()
+            self._last_hex = frame.hex()
+            if n != len(frame):
+                self.get_logger().warn(f"short write {n}/{len(frame)}")
+                self._tx_fail += 1
+                return False
+            self._tx_ok += 1
+            return True
+        except Exception as e:  # noqa: BLE001
+            self.get_logger().error(f"serial write failed: {e}")
+            self._tx_fail += 1
+            try:
+                if self._ser is not None:
+                    self._ser.close()
+            except Exception:  # noqa: BLE001
+                pass
+            self._ser = None
+            return False
 
     def _on_cmd(self, msg: String) -> None:
+        self._rx_cmd += 1
         try:
             data = json.loads(msg.data)
         except json.JSONDecodeError:
@@ -175,16 +268,34 @@ class H7BridgeNode(Node):
             float(data.get("leg_length", 0.15)),
             int(data.get("control_mode", 0)),
         )
-        if self.dry_run or self._ser is None:
-            self.get_logger().info(f"TX({len(frame)}B): {frame.hex()}")
-        else:
-            self._ser.write(frame)
+        if self.dry_run:
+            # 限频：大约每秒一条，避免刷屏
+            if self._rx_cmd % 20 == 1:
+                self.get_logger().info(
+                    f"[dry_run] TX({len(frame)}B) mode={data.get('control_mode')} "
+                    f"hex={frame.hex()}"
+                )
+            return
+        self._write_frame(frame)
+
+    def _log_tx_stats(self) -> None:
+        port = self._port_name if self._ser else "CLOSED"
+        self.get_logger().info(
+            f"h7_bridge: dry_run={self.dry_run} port={port} "
+            f"cmd_rx={self._rx_cmd} tx_ok={self._tx_ok} tx_fail={self._tx_fail} "
+            f"last={self._last_hex[:40]}{'...' if len(self._last_hex) > 40 else ''}"
+        )
 
     def _on_timer(self) -> None:
         payload = {
             "source": "h7_bridge",
             "dry_run": self.dry_run,
-            "note": "SB on RC selects RC/Both/PC; H7 arbitrates",
+            "serial_port": self._port_name,
+            "serial_open": bool(self._ser is not None and self._ser.is_open),
+            "cmd_rx": self._rx_cmd,
+            "tx_ok": self._tx_ok,
+            "tx_fail": self._tx_fail,
+            "acm": _list_acm_ports(),
         }
         msg = String()
         msg.data = json.dumps(payload, ensure_ascii=False)
