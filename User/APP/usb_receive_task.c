@@ -62,6 +62,10 @@ void usbReceiveTaskInit(void){
 /**
  * @brief 极简反转义：直接将 src 还原到 dest
  * @return 还原后的实际长度
+ *
+ * 协议要点（详见 doc/NUC_H7_USB通信协议.md）：
+ * - 线上帧头 0xFD、帧尾 0xF8 不转义；body 内 0xFD/0xF8/0xFE 才转义
+ * - 以「未转义的线上 0xF8」作为帧结束（故发送端不得把帧尾转成 FE 78）
  */
 uint16_t unescapeSimple(uint8_t* src, uint8_t* dest) {
     uint16_t j = 0;

@@ -270,6 +270,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>buf_length,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>22</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>robot_cmd</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

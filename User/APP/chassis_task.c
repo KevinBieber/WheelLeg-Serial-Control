@@ -121,7 +121,9 @@ void initChassisTask(void){
 }
 
 void loadManualControl(void){
-    /* SB: up=2 RC only; mid=1 both; down=0 PC only. SA always from RC. */
+    /* SB: up=2 RC only; mid=1 both; down=0 PC only.
+     * SA（遥控）与 PC control_mode 均可触发失能/起身（边沿）：
+     *   control_mode: 0=跑动 1=失能(REST) 2=跳跃 3=起身(STANDUP) */
     #define PC_CMD_TIMEOUT_MS  500U
 
     if(rc_data.state == REMOTE_ON){
@@ -149,6 +151,38 @@ void loadManualControl(void){
         uint8_t allow_rc = (rc_data.swich_SB == 2) || (rc_data.swich_SB == 1);
         uint8_t allow_pc = (rc_data.swich_SB == 0) || (rc_data.swich_SB == 1);
         uint8_t pc_fresh = robotCmdIsFresh(PC_CMD_TIMEOUT_MS);
+
+        /* PC 失能/起身/跳跃/回跑：边沿触发；失能与起身不要求已在 COMMON */
+        if(allow_pc && pc_fresh){
+            if(robot_cmd.control_mode != last_pc_mode){
+                if(robot_cmd.control_mode == 1){
+                    ctrl_data.chassis_status = CHASSIS_STATE_REST;
+                }
+                else if(robot_cmd.control_mode == 3){
+                    ctrl_data.chassis_status = CHASSIS_STATE_STANDUP;
+                    ctrl_data.standup_status = STANDUP_STATE_START;
+                }
+                else if(robot_cmd.control_mode == 2){
+                    if(ctrl_data.chassis_status == CHASSIS_STATE_COMMON){
+                        ctrl_data.common_mode = CHASSIS_JUMP;
+                        ctrl_data.jump_status = JUMP_STATE_PREPARE;
+                    }
+                }
+                else if(robot_cmd.control_mode == 0){
+                    if(ctrl_data.chassis_status == CHASSIS_STATE_COMMON){
+                        if(ctrl_data.common_mode == CHASSIS_JUMP &&
+                           (ctrl_data.jump_status == JUMP_STATE_NONE ||
+                            ctrl_data.jump_status == JUMP_STATE_LANDING)){
+                            ctrl_data.common_mode = CHASSIS_RUN;
+                            ctrl_data.jump_status = JUMP_STATE_NONE;
+                        }
+                    }
+                }
+                last_pc_mode = robot_cmd.control_mode;
+            }
+        }else{
+            last_pc_mode = 0xFF;
+        }
 
         if(ctrl_data.chassis_status == CHASSIS_STATE_COMMON){
             float vx_rc = 0.0f;
@@ -213,26 +247,6 @@ void loadManualControl(void){
                     }
                     last_SD = rc_data.swich_SD;
                 }
-            }
-
-            if(allow_pc && pc_fresh){
-                if(robot_cmd.control_mode != last_pc_mode){
-                    if(robot_cmd.control_mode == 2){
-                        ctrl_data.common_mode = CHASSIS_JUMP;
-                        ctrl_data.jump_status = JUMP_STATE_PREPARE;
-                    }
-                    else if(robot_cmd.control_mode == 0){
-                        if(ctrl_data.common_mode == CHASSIS_JUMP &&
-                           (ctrl_data.jump_status == JUMP_STATE_NONE ||
-                            ctrl_data.jump_status == JUMP_STATE_LANDING)){
-                            ctrl_data.common_mode = CHASSIS_RUN;
-                            ctrl_data.jump_status = JUMP_STATE_NONE;
-                        }
-                    }
-                    last_pc_mode = robot_cmd.control_mode;
-                }
-            }else{
-                last_pc_mode = 0xFF;
             }
         }
     }

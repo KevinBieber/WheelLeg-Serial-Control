@@ -75,3 +75,13 @@ ctrlboard-h7_imu\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/incl
 ctrlboard-h7_imu\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 ctrlboard-h7_imu\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 ctrlboard-h7_imu\chassis_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+ctrlboard-h7_imu\chassis_task.o: ..\User\APP\usb_receive_task.h
+ctrlboard-h7_imu\chassis_task.o: ../USB_DEVICE/App/usbd_cdc_if.h
+ctrlboard-h7_imu\chassis_task.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h
+ctrlboard-h7_imu\chassis_task.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
+ctrlboard-h7_imu\chassis_task.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
+ctrlboard-h7_imu\chassis_task.o: ../USB_DEVICE/Target/usbd_conf.h
+ctrlboard-h7_imu\chassis_task.o: D:\keil\core\ARM\ARMCC\Bin\..\include\stdio.h
+ctrlboard-h7_imu\chassis_task.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
+ctrlboard-h7_imu\chassis_task.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
+ctrlboard-h7_imu\chassis_task.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
