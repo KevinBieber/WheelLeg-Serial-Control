@@ -12,7 +12,7 @@ mkdir -p "${ROOT}/.run" "${LOG_DIR}"
 
 # frpc 可执行文件：默认你的路径；可用 FRPC_BIN 覆盖
 # 支持「文件」或「目录」（目录下找名为 frpc 的二进制）
-FRPC_BIN="${FRPC_BIN:-/home/jianghaoran/Workspace/frpc}"
+FRPC_BIN="${FRPC_BIN:-/home/jianghaoran/Workspace/frp/frpc}"
 if [[ -d "${FRPC_BIN}" ]]; then
   FRPC_BIN="${FRPC_BIN}/frpc"
 fi

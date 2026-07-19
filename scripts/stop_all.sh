@@ -49,7 +49,7 @@ if [[ -f "${FRPC_PID_FILE}" ]]; then
   rm -f "${FRPC_PID_FILE}"
 fi
 pkill -f "frpc -c ${FRPC_CONFIG}" 2>/dev/null || true
-# 兜底：你的默认路径
-pkill -f "/home/jianghaoran/Workspace/frpc" 2>/dev/null || true
+# 兜底：默认 frpc 路径
+pkill -f "/home/jianghaoran/Workspace/frp/frpc" 2>/dev/null || true
 
 echo "[stop] 完成"

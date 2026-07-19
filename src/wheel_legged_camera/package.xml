@@ -1,10 +1,10 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>wheel_legged_camera</name>
   <version>0.1.0</version>
   <description>Camera capture and image topics for NUC.</description>
-  <maintainer email="dev@local">wheel_legged</maintainer>
+  <maintainer email="wheel_legged@example.com">wheel_legged</maintainer>
   <license>Apache-2.0</license>
   <depend>rclpy</depend>
   <depend>sensor_msgs</depend>

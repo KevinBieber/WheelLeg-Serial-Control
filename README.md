@@ -46,13 +46,13 @@ chmod +x run.sh scripts/*.sh
 
 `start` 默认会启动 frpc：
 
-- 可执行文件：`/home/jianghaoran/Workspace/frpc`（若是目录则用其中的 `frpc`）
+- 可执行文件：`/home/jianghaoran/Workspace/frp/frpc`（若是目录则用其中的 `frpc`）
 - 配置文件：本仓库 `frp/frpc.toml`（请先改好 `serverAddr`）
 
 ```bash
 DRY_RUN=false ./run.sh start
 # 换 frpc 路径 / 配置：
-FRPC_BIN=/home/jianghaoran/Workspace/frpc FRPC_CONFIG=$PWD/frp/frpc.toml ./run.sh start
+FRPC_BIN=/home/jianghaoran/Workspace/frp/frpc FRPC_CONFIG=$PWD/frp/frpc.toml ./run.sh start
 # 只要 ROS、不要 frpc：
 SKIP_FRP=1 ./run.sh start
 ```
