@@ -1,0 +1,27 @@
+# PC 上位机默认配置（Windows）
+# 经 FRP 远程时：host=服务器地址，端口必须用服务器对外开放的 6004/6005/6006
+# 仅局域网直连 NUC 时：host=NUC的IP，端口改回 8081/8082/8083
+
+connection:
+  # FRP：填 Frps 公网 IP / 域名；局域网调试再改成 NUC IP
+  host: "118.190.106.114"
+  # 服务器映射端口（与 nuc_ros/frp/frpc.toml 的 remotePort 一致）
+  video_port: 6004      # 图像
+  status_port: 6005     # 状态
+  command_port: 6006    # 控制指令（PC → NUC）
+  heartbeat_timeout_s: 1.5
+
+video:
+  backend: "mjpeg_http"
+  path: "/stream"
+  max_fps: 30
+
+ui:
+  window_title: "Wheel-Legged Host (Windows)"
+  status_refresh_hz: 20
+
+control:
+  v_x_max: 1.8
+  w_max: 2.5
+  leg_length_default: 0.15
+  send_rate_hz: 20
