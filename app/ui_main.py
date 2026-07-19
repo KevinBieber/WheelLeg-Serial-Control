@@ -64,15 +64,16 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.video_label, stretch=3)
         right = QVBoxLayout()
         hint = QLabel(
-            "WASD 移动转向 | Q/E 腿高 | J 跳跃 K 回跑 | 空格急停 | R 重连视频\n"
-            "车上遥控器 SB：上=仅遥控 / 中=双控 / 下=仅PC"
+            "WASD 移动 | ↑/↓ 腿高 | E 起身 | 空格 失能 | J 跳跃 K 回跑 | R 重连视频\n"
+            "车上遥控器 SB：上=仅遥控 / 中=双控 / 下=仅PC（起身/失能需中或下）"
         )
         right.addWidget(hint)
         right.addWidget(self.status_view, stretch=1)
         layout.addLayout(right, stretch=1)
         self.setCentralWidget(root)
 
-        QShortcut(QKeySequence("Space"), self, activated=self._estop)
+        QShortcut(QKeySequence("Space"), self, activated=self._disable)
+        QShortcut(QKeySequence("E"), self, activated=self._standup)
         QShortcut(QKeySequence("R"), self, activated=self._reconnect_video)
         QShortcut(QKeySequence("J"), self, activated=self._jump)
         QShortcut(QKeySequence("K"), self, activated=self._run_mode)
@@ -90,10 +91,23 @@ class MainWindow(QMainWindow):
     def _reconnect_video(self) -> None:
         self.video.open()
 
-    def _estop(self) -> None:
+    def _disable(self) -> None:
+        """空格：失能（H7 CHASSIS_STATE_REST），等同遥控 SA 拨下。"""
         self._keys.clear()
-        self.command.zero()
-        self._control_mode = 0
+        self._control_mode = 1
+        self.command.set_cmd(
+            vel_x=0.0,
+            vel_y=0.0,
+            vel_w=0.0,
+            leg_length=self._leg,
+            control_mode=1,
+            estop=False,
+        )
+
+    def _standup(self) -> None:
+        """E：起身（H7 CHASSIS_STATE_STANDUP），等同遥控 SA 拨上。"""
+        self._control_mode = 3
+        self.command.set_cmd(control_mode=3, estop=False)
 
     def _jump(self) -> None:
         self._control_mode = 2
@@ -104,25 +118,36 @@ class MainWindow(QMainWindow):
         self.command.set_cmd(control_mode=0, estop=False)
 
     def keyPressEvent(self, event):  # noqa: N802
-        if event.isAutoRepeat():
-            return
         key = event.key()
-        self._keys.add(key)
+        # 方向键允许长按连发调腿长；其它键忽略系统自动重复
+        if event.isAutoRepeat() and key not in (Qt.Key_Up, Qt.Key_Down):
+            return
+        if not event.isAutoRepeat():
+            self._keys.add(key)
         if key == Qt.Key_Space:
-            self._estop()
-        elif key == Qt.Key_Q:
-            self._leg = max(0.10, self._leg - 0.01)
-        elif key == Qt.Key_E:
+            self._disable()
+            return
+        if key == Qt.Key_E:
+            self._standup()
+            return
+        if key == Qt.Key_Up:
             self._leg = min(0.20, self._leg + 0.01)
+        elif key == Qt.Key_Down:
+            self._leg = max(0.10, self._leg - 0.01)
         self._update_cmd_from_keys()
 
     def keyReleaseEvent(self, event):  # noqa: N802
         if event.isAutoRepeat():
             return
         self._keys.discard(event.key())
+        # 失能/起身保持 control_mode，直到其它模式键改掉
+        if self._control_mode in (1, 3):
+            return
         self._update_cmd_from_keys()
 
     def _update_cmd_from_keys(self) -> None:
+        if self._control_mode == 1:
+            return
         vx = 0.0
         w = 0.0
         if Qt.Key_W in self._keys:
@@ -150,7 +175,7 @@ class MainWindow(QMainWindow):
         st = self.status.get()
         age = st.get("age_s")
         link_ok = bool(st.get("online")) and age is not None and age < self._hb_timeout
-        self.command.enabled = link_ok and not self.command._cmd.get("estop", False)
+        self.command.enabled = link_ok
 
         lines = [
             f"时间: {time.strftime('%H:%M:%S')}",

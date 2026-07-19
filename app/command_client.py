@@ -43,7 +43,8 @@ class CommandClient:
             self._cmd.update(kwargs)
 
     def zero(self) -> None:
-        self.set_cmd(vel_x=0.0, vel_y=0.0, vel_w=0.0, estop=True)
+        """速度清零；不改 control_mode（失能请显式设 control_mode=1）。"""
+        self.set_cmd(vel_x=0.0, vel_y=0.0, vel_w=0.0, estop=False)
 
     @property
     def connected(self) -> bool:
