@@ -20,7 +20,7 @@ ELRS → H7（急停不经过本仓库）
 
 | 包名 | 作用 |
 |------|------|
-| `wheel_legged_bridge` | USB↔H7：状态上报 / 指令下发 |
+| `wheel_legged_bridge` | USB↔H7：按 `doc/NUC_H7_USB通信协议.md` 组帧下发 |
 | `wheel_legged_camera` | 相机 + MJPEG 直播（给 PC） |
 | `wheel_legged_teleop` | TCP 状态/指令网关（对接 pc_host） |
 | `wheel_legged_bringup` | launch / 参数汇总 |
