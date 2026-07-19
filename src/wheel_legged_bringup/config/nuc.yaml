@@ -1,0 +1,7 @@
+# NUC 侧默认参数备忘（launch 内已有同名参数，此文件供日后 yaml 化）
+serial_port: /dev/ttyACM0
+dry_run: true
+camera_index: 0
+status_port: 8082
+command_port: 8083
+video_port: 8081

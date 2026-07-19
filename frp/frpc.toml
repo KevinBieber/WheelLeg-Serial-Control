@@ -1,0 +1,30 @@
+serverAddr = "118.190.106.114"
+serverPort = 7000
+
+auth.method = "token"
+auth.token = "thisisatoken"
+
+# 视频：NUC 本机 8081 → 服务器 6004 → PC（数据：NUC→PC）
+[[proxies]]
+name = "wl_video"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 8081
+remotePort = 6004
+
+# 状态：NUC 本机 8082 → 服务器 6005 → PC（数据：NUC→PC）
+[[proxies]]
+name = "wl_status"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 8082
+remotePort = 6005
+
+# 指令：PC 连 服务器:6006 → NUC 本机 8083（数据：PC→NUC）
+# 必须在 NUC 侧映射；PC 上位机是客户端，不会在本机监听 8083
+[[proxies]]
+name = "wl_command"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 8083
+remotePort = 6006
