@@ -3,6 +3,10 @@ serial_port: /dev/ttyACM0
 dry_run: true
 # D435i: video0=深度 Z16, video2=红外 GREY, video4=彩色 YUYV（推流用这个）
 camera_index: 4
+video_width: 640
+video_height: 480
+video_fps: 30
+jpeg_quality: 60
 status_port: 8082
 command_port: 8083
 video_port: 8081

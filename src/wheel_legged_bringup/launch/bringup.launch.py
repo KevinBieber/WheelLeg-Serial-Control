@@ -47,7 +47,10 @@ def generate_launch_description() -> LaunchDescription:
                         "host": "0.0.0.0",
                         "port": 8081,
                         "path": "/stream",
-                        "fps": 20,
+                        "fps": 30,
+                        "width": 640,
+                        "height": 480,
+                        "jpeg_quality": 60,
                     }
                 ],
             ),
