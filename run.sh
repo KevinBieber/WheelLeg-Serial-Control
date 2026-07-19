@@ -20,7 +20,7 @@ usage() {
 环境变量（start 时可选）:
   DRY_RUN=false              实机写 H7 串口（默认 true）
   SERIAL_PORT=/dev/ttyACM0
-  CAMERA_INDEX=0
+  CAMERA_INDEX=4                 # D435i 彩色 /dev/video4；可覆盖
   FRPC_BIN=/home/jianghaoran/Workspace/frp/frpc   # 可执行文件或所在目录
   FRPC_CONFIG=${ROOT}/frp/frpc.toml
   SKIP_FRP=1                 只起 ROS、不起 frpc

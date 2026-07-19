@@ -66,7 +66,7 @@ source "${ROOT}/install/setup.bash"
 set -u
 
 SERIAL_PORT="${SERIAL_PORT:-/dev/ttyACM0}"
-CAMERA_INDEX="${CAMERA_INDEX:-0}"
+CAMERA_INDEX="${CAMERA_INDEX:-4}"
 DRY_RUN="${DRY_RUN:-true}"
 
 STAMP="$(date +%Y%m%d_%H%M%S)"

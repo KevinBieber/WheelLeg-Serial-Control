@@ -25,7 +25,7 @@ except ImportError:
 class CameraNode(Node):
     def __init__(self) -> None:
         super().__init__("wheel_legged_camera")
-        self.declare_parameter("device_index", 0)
+        self.declare_parameter("device_index", 4)  # D435i RGB = /dev/video4
         self.declare_parameter("width", 640)
         self.declare_parameter("height", 480)
         self.declare_parameter("fps", 30)

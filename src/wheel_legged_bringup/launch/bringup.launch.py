@@ -18,7 +18,11 @@ def generate_launch_description() -> LaunchDescription:
                 description="true=只打印USB帧；实机联调 false",
             ),
             DeclareLaunchArgument("serial_port", default_value="/dev/ttyACM0"),
-            DeclareLaunchArgument("camera_index", default_value="0"),
+            DeclareLaunchArgument(
+                "camera_index",
+                default_value="4",
+                description="OpenCV VideoCapture index；D435i 彩色为 /dev/video4",
+            ),
             Node(
                 package="wheel_legged_bridge",
                 executable="h7_bridge",

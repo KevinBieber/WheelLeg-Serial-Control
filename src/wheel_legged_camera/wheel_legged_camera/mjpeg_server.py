@@ -78,7 +78,7 @@ class MjpegServerNode(Node):
         if cv2 is None:
             raise RuntimeError("opencv-python required")
 
-        self.declare_parameter("device_index", 0)
+        self.declare_parameter("device_index", 4)  # D435i RGB = /dev/video4
         self.declare_parameter("host", "0.0.0.0")
         self.declare_parameter("port", 8081)
         self.declare_parameter("path", "/stream")

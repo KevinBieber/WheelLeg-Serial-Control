@@ -1,7 +1,8 @@
 # NUC 侧默认参数备忘（launch 内已有同名参数，此文件供日后 yaml 化）
 serial_port: /dev/ttyACM0
 dry_run: true
-camera_index: 0
+# D435i: video0=深度 Z16, video2=红外 GREY, video4=彩色 YUYV（推流用这个）
+camera_index: 4
 status_port: 8082
 command_port: 8083
 video_port: 8081

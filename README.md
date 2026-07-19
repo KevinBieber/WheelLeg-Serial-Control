@@ -63,6 +63,22 @@ SKIP_FRP=1 ./run.sh start
 - `python3-serial`、`python3-opencv`（或 pip：`pyserial`、`opencv-python`）
 - 可选：RealSense SDK / `realsense2_camera`
 
+### RealSense D435i
+
+当前 `mjpeg_server` 用 OpenCV 打开 V4L2 设备。本机 D435i 映射一般为：
+
+| 设备 | 用途 |
+|------|------|
+| `/dev/video0` | 深度 Z16 |
+| `/dev/video2` | 红外 GREY |
+| **`/dev/video4`** | **彩色 YUYV（默认推流）** |
+
+默认 `CAMERA_INDEX=4`。若插拔顺序变了，用 `v4l2-ctl -d /dev/videoN --list-formats-ext` 找 `YUYV` 再覆盖：
+
+```bash
+CAMERA_INDEX=4 ./run.sh start
+```
+
 ## 拷到 NUC 后编译
 
 在 **Ubuntu NUC** 终端：
